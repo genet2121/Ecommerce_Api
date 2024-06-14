@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('inventory', {
+  return sequelize.define('inventories', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -21,7 +21,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     sequelize,
-    tableName: 'inventory',
+    tableName: 'inventories',
     timestamps: true,
     indexes: [
       {
@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_inventory_products",
+        name: "fk_inventories_products",
         using: "BTREE",
         fields: [
           { name: "product_id" },

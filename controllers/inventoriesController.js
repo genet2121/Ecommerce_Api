@@ -1,9 +1,9 @@
-const Inventory = require('../models').inventory;
+const Inventories = require('../models').inventories;
 
 // Create new inventory entry
 const createInventory = async (req, res) => {
   try {
-    const inventory = await Inventory.create(req.body);
+    const inventory = await Inventories.create(req.body);
     return res.status(201).json(inventory);
   } catch (error) {
     return res.status(500).json({ error: 'Internal server error' });
@@ -11,9 +11,9 @@ const createInventory = async (req, res) => {
 };
 
 // Get all inventory entries
-const getAllInventory = async (req, res) => {
+const getAllInventories = async (req, res) => {
   try {
-    const inventory = await Inventory.findAll();
+    const inventory = await Inventories.findAll();
     return res.status(200).json(inventory);
   } catch (error) {
     return res.status(500).json({ error: 'Internal server error' });
@@ -23,7 +23,7 @@ const getAllInventory = async (req, res) => {
 // Get inventory entry by ID
 const getInventoryById = async (req, res) => {
   try {
-    const inventory = await Inventory.findByPk(req.params.id);
+    const inventory = await Inventories.findByPk(req.params.id);
     if (!inventory) {
       return res.status(404).json({ error: 'Inventory entry not found' });
     }
@@ -36,7 +36,7 @@ const getInventoryById = async (req, res) => {
 // Update inventory entry by ID
 const updateInventory = async (req, res) => {
   try {
-    const inventory = await Inventory.findByPk(req.params.id);
+    const inventory = await Inventories.findByPk(req.params.id);
     if (!inventory) {
       return res.status(404).json({ error: 'Inventory entry not found' });
     }
@@ -63,7 +63,7 @@ const deleteInventory = async (req, res) => {
 
 module.exports = {
   createInventory,
-  getAllInventory,
+  getAllInventories,
   getInventoryById,
   updateInventory,
   deleteInventory

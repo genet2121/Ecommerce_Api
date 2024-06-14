@@ -3,7 +3,7 @@ const Admins = require('../models').admins;
 // Create a new admin
 const createAdmin = async (req, res) => {
   try {
-    const admin = await Admin.create(req.body);
+    const admin = await Admins.create(req.body);
     return res.status(201).json(admin);
   } catch (error) {
     return res.status(500).json({ error: 'Internal server error' });
@@ -13,7 +13,7 @@ const createAdmin = async (req, res) => {
 // Get all admins
 const getAllAdmins = async (req, res) => {
   try {
-    const admins = await Admin.findAll();
+    const admins = await Admins.findAll();
     return res.status(200).json(admins);
   } catch (error) {
     return res.status(500).json({ error: 'Internal server error' });
@@ -23,7 +23,7 @@ const getAllAdmins = async (req, res) => {
 // Get admin by ID
 const getAdminById = async (req, res) => {
   try {
-    const admin = await Admin.findByPk(req.params.id);
+    const admin = await Admins.findByPk(req.params.id);
     if (!admin) {
       return res.status(404).json({ error: 'Admin not found' });
     }
@@ -36,7 +36,7 @@ const getAdminById = async (req, res) => {
 // Update admin by ID
 const updateAdmin = async (req, res) => {
   try {
-    const admin = await Admin.findByPk(req.params.id);
+    const admin = await Admins.findByPk(req.params.id);
     if (!admin) {
       return res.status(404).json({ error: 'Admin not found' });
     }
@@ -50,7 +50,7 @@ const updateAdmin = async (req, res) => {
 // Delete admin by ID
 const deleteAdmin = async (req, res) => {
   try {
-    const admin = await Admin.findByPk(req.params.id);
+    const admin = await Admins.findByPk(req.params.id);
     if (!admin) {
       return res.status(404).json({ error: 'Admin not found' });
     }
