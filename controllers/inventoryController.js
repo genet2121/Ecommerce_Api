@@ -1,0 +1,70 @@
+const Inventory = require('../models').inventory;
+
+// Create new inventory entry
+const createInventory = async (req, res) => {
+  try {
+    const inventory = await Inventory.create(req.body);
+    return res.status(201).json(inventory);
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get all inventory entries
+const getAllInventory = async (req, res) => {
+  try {
+    const inventory = await Inventory.findAll();
+    return res.status(200).json(inventory);
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get inventory entry by ID
+const getInventoryById = async (req, res) => {
+  try {
+    const inventory = await Inventory.findByPk(req.params.id);
+    if (!inventory) {
+      return res.status(404).json({ error: 'Inventory entry not found' });
+    }
+    return res.status(200).json(inventory);
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Update inventory entry by ID
+const updateInventory = async (req, res) => {
+  try {
+    const inventory = await Inventory.findByPk(req.params.id);
+    if (!inventory) {
+      return res.status(404).json({ error: 'Inventory entry not found' });
+    }
+    await inventory.update(req.body);
+    return res.status(200).json(inventory);
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Delete inventory entry by ID
+const deleteInventory = async (req, res) => {
+  try {
+    const inventory = await Inventory.findByPk(req.params.id);
+    if (!inventory) {
+      return res.status(404).json({ error: 'Inventory entry not found' });
+    }
+    await inventory.destroy();
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = {
+  createInventory,
+  getAllInventory,
+  getInventoryById,
+  updateInventory,
+  deleteInventory
+};
