@@ -7,7 +7,7 @@ var _category_attributes = require("./category_attributes");
 var _complaints = require("./complaints");
 var _discounts = require("./discounts");
 var _documents = require("./documents");
-var _inventory = require("./inventory");
+var _inventories = require("./inventories");
 var _orders = require("./orders");
 var _payment_methods = require("./payment_methods");
 var _product_images = require("./product_images");
@@ -30,7 +30,7 @@ function initModels(sequelize) {
   var complaints = _complaints(sequelize, DataTypes);
   var discounts = _discounts(sequelize, DataTypes);
   var documents = _documents(sequelize, DataTypes);
-  var inventory = _inventory(sequelize, DataTypes);
+  var inventories = _inventories(sequelize, DataTypes);
   var orders = _orders(sequelize, DataTypes);
   var payment_methods = _payment_methods(sequelize, DataTypes);
   var product_images = _product_images(sequelize, DataTypes);
@@ -58,8 +58,8 @@ function initModels(sequelize) {
   products.hasMany(carts, { as: "carts", foreignKey: "product_id"});
   discounts.belongsTo(products, { as: "product", foreignKey: "product_id"});
   products.hasMany(discounts, { as: "discounts", foreignKey: "product_id"});
-  inventory.belongsTo(products, { as: "product", foreignKey: "product_id"});
-  products.hasMany(inventory, { as: "inventories", foreignKey: "product_id"});
+  inventories.belongsTo(products, { as: "product", foreignKey: "product_id"});
+  products.hasMany(inventories, { as: "inventories", foreignKey: "product_id"});
   product_images.belongsTo(products, { as: "product", foreignKey: "product_id"});
   products.hasMany(product_images, { as: "product_images", foreignKey: "product_id"});
   reviews.belongsTo(products, { as: "product", foreignKey: "product_id"});
@@ -110,7 +110,7 @@ function initModels(sequelize) {
     complaints,
     discounts,
     documents,
-    inventory,
+    inventories,
     orders,
     payment_methods,
     product_images,
