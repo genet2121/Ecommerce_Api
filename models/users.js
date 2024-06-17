@@ -40,6 +40,9 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'users',
     timestamps: true,
+    defaultScope: {
+      attributes: { exclude: ['passwrd'] }
+    },
     indexes: [
       {
         name: "PRIMARY",
