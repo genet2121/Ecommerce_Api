@@ -6,7 +6,7 @@ const createBankDetail = async (req, res) => {
     const bankDetail = await BankDetails.create(req.body);
     return res.status(201).json(bankDetail);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

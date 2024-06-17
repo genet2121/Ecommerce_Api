@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 require('dotenv').config(); 
 
 const adminsRoutes = require('./routes/adminsRoutes');
@@ -24,11 +25,11 @@ const userSubscriptionsRoutes = require('./routes/userSubscriptionsRoutes');
 const walletDetailsRoutes = require('./routes/walletDetailsRoutes');
 
 const app = express();
-const router = express.Router();
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Routes
 app.get('/', (req, res) => {

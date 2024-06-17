@@ -100,7 +100,7 @@
 // };
 
 
-const { users: Users } = require('../models'); // Correct import syntax for sequelize models
+const { users: Users } = require('../models'); 
 const { sendVerificationEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');
 const jwt = require('jsonwebtoken');
@@ -109,7 +109,6 @@ const createUser = async (req, res) => {
   try {
     const { username, business_name, email, passwrd, user_type } = req.body;
 
-    // Check if email already exists
     const existingUser = await Users.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists' });
@@ -120,6 +119,7 @@ const createUser = async (req, res) => {
     await sendVerificationEmail(user.email, token);
     res.status(201).json({ message: 'User created. Please check your email to verify your account.' });
   } catch (error) {
+
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -138,8 +138,27 @@ const verifyUser = async (req, res) => {
     await user.save();
     res.status(200).json({ message: 'Email verified successfully.' });
   } catch (error) {
-    console.error('Error verifying user:', error); // Improved error logging
+    console.error('Error verifying user:', error); 
     res.status(400).json({ error: 'Invalid or expired token.' });
+
+    return res.status(500).json({ error: error });
+  }
+};
+
+// Upload user image
+const uploadImage = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const imagePath = req.file.path;
+    const user = await Users.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    await user.update({ image: imagePath });
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error });
+
   }
 };
 
@@ -150,8 +169,12 @@ const getAllUsers = async (req, res) => {
     });
     res.status(200).json(users);
   } catch (error) {
-    console.error('Error fetching users:', error); // Improved error logging
+
+    console.error('Error fetching users:', error); 
     res.status(500).json({ error: 'Internal server error' });
+
+    return res.status(500).json({ error: error });
+
   }
 };
 
@@ -165,8 +188,12 @@ const getUserById = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error fetching user:', error); // Improved error logging
+
+    console.error('Error fetching user:', error); 
     res.status(500).json({ error: 'Internal server error' });
+
+    return res.status(500).json({ error: error });
+
   }
 };
 
@@ -179,8 +206,12 @@ const updateUser = async (req, res) => {
     await user.update(req.body);
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error updating user:', error); // Improved error logging
+
+    console.error('Error updating user:', error); 
     res.status(500).json({ error: 'Internal server error' });
+
+    return res.status(500).json({ error: error });
+
   }
 };
 
@@ -193,13 +224,17 @@ const deleteUser = async (req, res) => {
     await user.destroy();
     res.status(204).send();
   } catch (error) {
-    console.error('Error deleting user:', error); // Improved error logging
+    console.error('Error deleting user:', error); 
     res.status(500).json({ error: 'Internal server error' });
+
+    return res.status(500).json({ error: error });
+
   }
 };
 
 module.exports = {
   createUser,
+  uploadImage,
   getAllUsers,
   getUserById,
   updateUser,

@@ -3,10 +3,20 @@ const Complaints = require('../models').complaints;
 // Create a new complaint
 const createComplaint = async (req, res) => {
   try {
-    const complaint = await Complaints.create(req.body);
+    const { topic, complainee_id, complaint_text, status_in } = req.body;
+    const imagePath = req.file.path;
+
+    const complaint = await Complaints.create({
+      topic: topic,
+      complainee_id: complainee_id,
+      complaint_text: complaint_text,
+      complaint_images: imagePath,
+      status_in: status_in
+    });
+
     return res.status(201).json(complaint);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +26,7 @@ const getAllComplaints = async (req, res) => {
     const complaints = await Complaints.findAll();
     return res.status(200).json(complaints);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +39,7 @@ const getComplaintById = async (req, res) => {
     }
     return res.status(200).json(complaint);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +53,7 @@ const updateComplaint = async (req, res) => {
     await complaint.update(req.body);
     return res.status(200).json(complaint);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +67,7 @@ const deleteComplaint = async (req, res) => {
     await complaint.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

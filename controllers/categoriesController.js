@@ -3,10 +3,18 @@ const Categories = require('../models').categories;
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const category = await Categories.create(req.body);
+    const { c_name, parent_id,} = req.body;
+    const imagePath = req.file.path;
+
+    const category = await Complaints.create({
+      c_name: c_name,
+      parent_id: parent_id,
+      image: imagePath
+    });
+
     return res.status(201).json(category);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +24,7 @@ const getAllCategories = async (req, res) => {
     const categories = await Categories.findAll();
     return res.status(200).json(categories);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +37,7 @@ const getCategoryById = async (req, res) => {
     }
     return res.status(200).json(category);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +51,7 @@ const updateCategory = async (req, res) => {
     await category.update(req.body);
     return res.status(200).json(category);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +65,7 @@ const deleteCategory = async (req, res) => {
     await category.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

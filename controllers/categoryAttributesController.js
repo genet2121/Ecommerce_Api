@@ -6,7 +6,7 @@ const createCategoryAttribute = async (req, res) => {
     const categoryAttribute = await CategoryAttributes.create(req.body);
     return res.status(201).json(categoryAttribute);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllCategoryAttributes = async (req, res) => {
     const categoryAttributes = await CategoryAttributes.findAll();
     return res.status(200).json(categoryAttributes);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getCategoryAttributeById = async (req, res) => {
     }
     return res.status(200).json(categoryAttribute);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateCategoryAttribute = async (req, res) => {
     await categoryAttribute.update(req.body);
     return res.status(200).json(categoryAttribute);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteCategoryAttribute = async (req, res) => {
     await categoryAttribute.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

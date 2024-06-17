@@ -1,11 +1,24 @@
 // complaintsRoutes.js
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const complaintsController = require('../controllers/complaintsController');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'complaintUploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname));
+    }
+  });
+  
+  const upload = multer({ storage: storage });
 
 router.get('/', complaintsController.getAllComplaints);
 router.get('/:id', complaintsController.getComplaintById);
-router.post('/', complaintsController.createComplaint);
+router.post('/', upload.single('complaint_images'), complaintsController.createComplaint);
 router.put('/:id', complaintsController.updateComplaint);
 router.delete('/:id', complaintsController.deleteComplaint);
 

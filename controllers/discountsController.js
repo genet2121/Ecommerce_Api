@@ -6,7 +6,7 @@ const createDiscount = async (req, res) => {
     const discount = await Discounts.create(req.body);
     return res.status(201).json(discount);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllDiscounts = async (req, res) => {
     const discounts = await Discounts.findAll();
     return res.status(200).json(discounts);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getDiscountById = async (req, res) => {
     }
     return res.status(200).json(discount);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateDiscount = async (req, res) => {
     await discount.update(req.body);
     return res.status(200).json(discount);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteDiscount = async (req, res) => {
     await discount.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

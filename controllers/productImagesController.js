@@ -3,10 +3,17 @@ const ProductImages = require('../models').product_images;
 // Create a new product image
 const createProductImage = async (req, res) => {
   try {
-    const productImage = await ProductImages.create(req.body);
-    return res.status(201).json(productImage);
+    const { product_id } = req.body;
+    const imagePath = req.file.path;
+
+    const admin = await Complaints.create({
+      product_id: product_id,
+      image: imagePath
+    });
+
+    return res.status(201).json(admin);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +23,7 @@ const getAllProductImages = async (req, res) => {
     const productImages = await ProductImages.findAll();
     return res.status(200).json(productImages);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +36,7 @@ const getProductImageById = async (req, res) => {
     }
     return res.status(200).json(productImage);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +50,7 @@ const updateProductImage = async (req, res) => {
     await productImage.update(req.body);
     return res.status(200).json(productImage);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +64,7 @@ const deleteProductImage = async (req, res) => {
     await productImage.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
