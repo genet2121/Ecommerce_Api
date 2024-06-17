@@ -3,10 +3,18 @@ const Documents = require('../models').documents;
 // Create a new document
 const createDocument = async (req, res) => {
   try {
-    const document = await Documents.create(req.body);
+    const { user_id, doc_type } = req.body;
+    const imagePath = req.file.path;
+
+    const document = await Documents.create({
+      user_id: user_id,
+      doc_type: doc_type,
+      image: imagePath
+    });
+
     return res.status(201).json(document);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +24,7 @@ const getAllDocuments = async (req, res) => {
     const documents = await Documents.findAll();
     return res.status(200).json(documents);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +37,7 @@ const getDocumentById = async (req, res) => {
     }
     return res.status(200).json(document);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +51,7 @@ const updateDocument = async (req, res) => {
     await document.update(req.body);
     return res.status(200).json(document);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +65,7 @@ const deleteDocument = async (req, res) => {
     await document.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

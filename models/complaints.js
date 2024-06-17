@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     complaint_images: {
-      type: DataTypes.BLOB,
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     status_in: {

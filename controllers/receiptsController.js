@@ -6,7 +6,7 @@ const createReceipt = async (req, res) => {
     const receipt = await Receipts.create(req.body);
     return res.status(201).json(receipt);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllReceipts = async (req, res) => {
     const receipts = await Receipts.findAll();
     return res.status(200).json(receipts);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getReceiptById = async (req, res) => {
     }
     return res.status(200).json(receipt);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateReceipt = async (req, res) => {
     await receipt.update(req.body);
     return res.status(200).json(receipt);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteReceipt = async (req, res) => {
     await receipt.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

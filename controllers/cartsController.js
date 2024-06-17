@@ -6,7 +6,7 @@ const createCart = async (req, res) => {
     const cart = await Carts.create(req.body);
     return res.status(201).json(cart);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllCarts = async (req, res) => {
     const cart = await Carts.findAll();
     return res.status(200).json(cart);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getCartById = async (req, res) => {
     }
     return res.status(200).json(cart);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateCart = async (req, res) => {
     await cart.update(req.body);
     return res.status(200).json(cart);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteCart = async (req, res) => {
     await cart.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

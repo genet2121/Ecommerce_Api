@@ -6,7 +6,7 @@ const createUserAddress = async (req, res) => {
     const userAddress = await UserAddresses.create(req.body);
     return res.status(201).json(userAddress);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllUserAddresses = async (req, res) => {
     const userAddresses = await UserAddresses.findAll();
     return res.status(200).json(userAddresses);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getUserAddressById = async (req, res) => {
     }
     return res.status(200).json(userAddress);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateUserAddress = async (req, res) => {
     await userAddress.update(req.body);
     return res.status(200).json(userAddress);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteUserAddress = async (req, res) => {
     await userAddress.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

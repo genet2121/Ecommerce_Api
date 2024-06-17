@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       unique: "c_name"
     },
     image: {
-      type: DataTypes.BLOB,
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     parent_id: {

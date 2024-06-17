@@ -6,7 +6,7 @@ const createTransaction = async (req, res) => {
     const transaction = await Transactions.create(req.body);
     return res.status(201).json(transaction);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllTransactions = async (req, res) => {
     const transactions = await Transactions.findAll();
     return res.status(200).json(transactions);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getTransactionById = async (req, res) => {
     }
     return res.status(200).json(transaction);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateTransaction = async (req, res) => {
     await transaction.update(req.body);
     return res.status(200).json(transaction);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteTransaction = async (req, res) => {
     await transaction.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

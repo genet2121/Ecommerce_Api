@@ -6,7 +6,7 @@ const createUserSubscription = async (req, res) => {
     const userSubscription = await UserSubscriptions.create(req.body);
     return res.status(201).json(userSubscription);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllUserSubscriptions = async (req, res) => {
     const userSubscriptions = await UserSubscriptions.findAll();
     return res.status(200).json(userSubscriptions);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getUserSubscriptionById = async (req, res) => {
     }
     return res.status(200).json(userSubscription);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateUserSubscription = async (req, res) => {
     await userSubscription.update(req.body);
     return res.status(200).json(userSubscription);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteUserSubscription = async (req, res) => {
     await userSubscription.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

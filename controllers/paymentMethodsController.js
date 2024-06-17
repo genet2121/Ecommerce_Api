@@ -6,7 +6,7 @@ const createPaymentMethod = async (req, res) => {
     const paymentMethod = await PaymentMethods.create(req.body);
     return res.status(201).json(paymentMethod);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllPaymentMethods = async (req, res) => {
     const paymentMethods = await PaymentMethods.findAll();
     return res.status(200).json(paymentMethods);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getPaymentMethodById = async (req, res) => {
     }
     return res.status(200).json(paymentMethod);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updatePaymentMethod = async (req, res) => {
     await paymentMethod.update(req.body);
     return res.status(200).json(paymentMethod);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deletePaymentMethod = async (req, res) => {
     await paymentMethod.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

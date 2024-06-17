@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_inventories_products",
+        name: "fk_inventory_products",
         using: "BTREE",
         fields: [
           { name: "product_id" },

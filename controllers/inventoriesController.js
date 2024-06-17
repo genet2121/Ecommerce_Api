@@ -6,7 +6,7 @@ const createInventory = async (req, res) => {
     const inventory = await Inventories.create(req.body);
     return res.status(201).json(inventory);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllInventories = async (req, res) => {
     const inventory = await Inventories.findAll();
     return res.status(200).json(inventory);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getInventoryById = async (req, res) => {
     }
     return res.status(200).json(inventory);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateInventory = async (req, res) => {
     await inventory.update(req.body);
     return res.status(200).json(inventory);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteInventory = async (req, res) => {
     await inventory.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

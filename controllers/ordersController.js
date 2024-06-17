@@ -6,7 +6,7 @@ const createOrder = async (req, res) => {
     const order = await Orders.create(req.body);
     return res.status(201).json(order);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllOrders = async (req, res) => {
     const orders = await Orders.findAll();
     return res.status(200).json(orders);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getOrderById = async (req, res) => {
     }
     return res.status(200).json(order);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateOrder = async (req, res) => {
     await order.update(req.body);
     return res.status(200).json(order);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteOrder = async (req, res) => {
     await order.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

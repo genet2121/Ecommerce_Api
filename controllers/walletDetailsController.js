@@ -6,7 +6,7 @@ const createWalletDetail = async (req, res) => {
     const walletDetail = await WalletDetails.create(req.body);
     return res.status(201).json(walletDetail);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getAllWalletDetails = async (req, res) => {
     const walletDetails = await WalletDetails.findAll();
     return res.status(200).json(walletDetails);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getWalletDetailById = async (req, res) => {
     }
     return res.status(200).json(walletDetail);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateWalletDetail = async (req, res) => {
     await walletDetail.update(req.body);
     return res.status(200).json(walletDetail);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteWalletDetail = async (req, res) => {
     await walletDetail.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

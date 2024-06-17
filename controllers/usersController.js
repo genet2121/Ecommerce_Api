@@ -6,7 +6,23 @@ const createUser = async (req, res) => {
     const user = await Users.create(req.body);
     return res.status(201).json(user);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
+  }
+};
+
+// Upload user image
+const uploadImage = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const imagePath = req.file.path;
+    const user = await Users.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    await user.update({ image: imagePath });
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -16,7 +32,7 @@ const getAllUsers = async (req, res) => {
     const users = await Users.findAll();
     return res.status(200).json(users);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +45,7 @@ const getUserById = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +59,7 @@ const updateUser = async (req, res) => {
     await user.update(req.body);
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,12 +73,13 @@ const deleteUser = async (req, res) => {
     await user.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
 module.exports = {
   createUser,
+  uploadImage,
   getAllUsers,
   getUserById,
   updateUser,
