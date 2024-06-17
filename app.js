@@ -36,27 +36,27 @@ app.get('/', (req, res) => {
 });
 
 // Use router.use to include all route handlers
-router.use('/admins', adminsRoutes);
-router.use('/bank-details', bankDetailsRoutes);
-router.use('/carts', cartsRoutes);
-router.use('/categories', categoriesRoutes);
-router.use('/category-attributes', categoryAttributesRoutes);
-router.use('/complaints', complaintsRoutes);
-router.use('/discounts', discountsRoutes);
-router.use('/inventory', inventoryRoutes);
-router.use('/orders', ordersRoutes);
-router.use('/payment-methods', paymentMethodsRoutes);
-router.use('/documents', documentsRoutes);
-router.use('/products', productsRoutes);
-router.use('/product-images', productImagesRoutes);
-router.use('/receipts', receiptsRoutes);
-router.use('/reviews', reviewsRoutes);
-router.use('/subscription-plans', subscriptionPlansRoutes);
-router.use('/transactions', transactionsRoutes);
-router.use('/user-addresses', userAddressesRoutes);
-router.use('/users', usersRoutes);
-router.use('/user-subscriptions', userSubscriptionsRoutes);
-router.use('/wallet-details', walletDetailsRoutes);
+app.use('/admins', adminsRoutes);
+app.use('/bank-details', bankDetailsRoutes);
+app.use('/carts', cartsRoutes);
+app.use('/categories', categoriesRoutes);
+app.use('/category-attributes', categoryAttributesRoutes);
+app.use('/complaints', complaintsRoutes);
+app.use('/discounts', discountsRoutes);
+app.use('/inventory', inventoryRoutes);
+app.use('/orders', ordersRoutes);
+app.use('/payment-methods', paymentMethodsRoutes);
+app.use('/documents', documentsRoutes);
+app.use('/products', productsRoutes);
+app.use('/product-images', productImagesRoutes);
+app.use('/receipts', receiptsRoutes);
+app.use('/reviews', reviewsRoutes);
+app.use('/subscription-plans', subscriptionPlansRoutes);
+app.use('/transactions', transactionsRoutes);
+app.use('/user-addresses', userAddressesRoutes);
+app.use('/users', usersRoutes);
+app.use('/user-subscriptions', userSubscriptionsRoutes);
+app.use('/wallet-details', walletDetailsRoutes);
 
 // Start the server
 app.listen(process.env.PORT, () => {
