@@ -35,7 +35,11 @@ module.exports = function(sequelize, DataTypes) {
     user_type: {
       type: DataTypes.ENUM('buyer','seller'),
       allowNull: false
-    }
+    },
+    verification_token: {
+      type: DataTypes.STRING(10),
+      allowNull: true
+    },
   }, {
     sequelize,
     tableName: 'users',

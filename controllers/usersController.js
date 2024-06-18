@@ -101,9 +101,9 @@
 
 
 const { users: Users } = require('../models'); 
-const { sendVerificationEmail } = require('../utils/mailer');
+const { sendEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');
-const jwt = require('jsonwebtoken');
+
 
 const createUser = async (req, res) => {
   try {
@@ -114,9 +114,13 @@ const createUser = async (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
-    const user = await Users.create({ username, business_name, email, passwrd, user_type });
     const token = generateVerificationToken(user);
-    await sendVerificationEmail(user.email, token);
+    const user = await Users.create({ username, business_name, email, passwrd, user_type, verified: false, verification_token: token });
+
+    const url = `http://localhost:8080/api/users/verify/${user.id}/${token}`;
+    let msg = `Please click <a href="${url}">here</a> to verify your email.`
+    let subject = 'Verify your email';
+    await sendEmail(user.email, subject, msg);
     res.status(201).json({ message: 'User created. Please check your email to verify your account.' });
   } catch (error) {
 
@@ -128,12 +132,16 @@ const createUser = async (req, res) => {
 
 const verifyUser = async (req, res) => {
   try {
-    const { token } = req.params;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await Users.findByPk(decoded.id);
+    const { token, id } = req.params;
+    const user = await Users.findByPk(id);
     if (!user) {
       return res.status(400).json({ error: 'Invalid token or user does not exist.' });
     }
+
+    if(user.verification_token != token) {
+      return res.status(400).json({ error: 'Verification failed!' });
+    }
+
     user.verified = true;
     await user.save();
     res.status(200).json({ message: 'Email verified successfully.' });

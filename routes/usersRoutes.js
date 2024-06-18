@@ -22,6 +22,6 @@ router.post('/', usersController.createUser);
 router.put('/:id', usersController.updateUser);
 router.put('/:id', upload.single('image'), usersController.uploadImage);
 router.delete('/:id', usersController.deleteUser);
-router.get('/verify/:token', usersController.verifyUser);
+router.get('/verify/:id/:token', usersController.verifyUser);
 
 module.exports = router;
