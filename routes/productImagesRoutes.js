@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const productImagesController = require('../controllers/productImagesController');
-const { userValidationRules, validate } = require('../validators/productImagesValidator');
+const { productImageValidationRules, validate } = require('../validators/productImagesValidator');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 
 router.get('/', productImagesController.getAllProductImages);
 router.get('/:id', productImagesController.getProductImageById);
-router.post('/', upload.single('image'), userValidationRules, validate, productImagesController.createProductImage);
+router.post('/', upload.single('image'), productImageValidationRules, validate, productImagesController.createProductImage);
 router.put('/:id', productImagesController.updateProductImage);
 router.delete('/:id', productImagesController.deleteProductImage);
 

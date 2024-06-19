@@ -1,6 +1,6 @@
 const { body, validationResult } = require('express-validator');
 
-const recieptsValidationRules = [
+const receiptValidationRules = [
   body('transaction_id')
     .notEmpty().withMessage('Transaction ID is required')
     .isInt({ min: 1 }).withMessage('Transaction ID must be a positive integer'),
@@ -27,7 +27,7 @@ const validate = (req, res, next) => {
 };
 
 module.exports = {
-  recieptsValidationRules,
+  receiptValidationRules,
   validate,
 };
 

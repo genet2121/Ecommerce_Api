@@ -1,4 +1,4 @@
-const Encryption = require('../infrastructure/service/authentatication/encripution'); 
+const Encryption = require('../infrastructure/service/authentatication/encryption'); 
 const { users: Users } = require('../models'); 
 const { sendEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');

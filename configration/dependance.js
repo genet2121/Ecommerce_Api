@@ -1,7 +1,4 @@
-
-
-
-const EncryptionService = require("../infrastructure/service/authentatication/encripution");
+const EncryptionService = require("../infrastructure/service/authentatication/encryption");
 const TokenGeneratorService = require("../infrastructure/service/authentatication/tokenGenerator");
 const ExceptionHandlingService = require("../infrastructure/service/exception/expceptionHandle");
 

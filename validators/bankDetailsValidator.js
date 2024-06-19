@@ -1,6 +1,6 @@
 const { body, validationResult } = require('express-validator');
 
-const bankDetailsValidationRules = [
+const bankDetailValidationRules = [
   body('payment_method_id')
     .notEmpty().withMessage('Payment method ID is required')
     .isInt({ min: 1 }).withMessage('Payment method ID must be a positive integer'),
@@ -30,6 +30,6 @@ const validate = (req, res, next) => {
 };
 
 module.exports = {
-  bankDetailsValidationRules,
+  bankDetailValidationRules,
   validate,
 };
