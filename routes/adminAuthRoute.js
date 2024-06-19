@@ -1,19 +1,12 @@
 const express = require("express");
 
-
-
 const AdminAuthController = require("../controllers/auth/adminAuthController");
-
-
-
 
 module.exports = (dependencies)=> {
 
     const adminAuthController = new AdminAuthController(dependencies);
     
-    
     const router = express.Router();
-
 
     router.post('/login', async (req, res, next) => {
         try{

@@ -6,7 +6,7 @@ const createProductImage = async (req, res) => {
     const { product_id } = req.body;
     const imagePath = req.file.path;
 
-    const admin = await Complaints.create({
+    const admin = await ProductImages.create({
       product_id: product_id,
       image: imagePath
     });

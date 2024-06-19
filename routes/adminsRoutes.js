@@ -4,6 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const adminsController = require('../controllers/adminsController');
+const { userValidationRules, validate } = require('../validators/adminsValidator');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 
 router.get('/', adminsController.getAllAdmins);
 router.get('/:id', adminsController.getAdminById);
-router.post('/', upload.single('photo'), adminsController.createAdmin);
+router.post('/', upload.single('photo'), userValidationRules, validate, adminsController.createAdmin);
 router.put('/:id', adminsController.updateAdmin);
 router.delete('/:id', adminsController.deleteAdmin);
 
