@@ -1,24 +1,5 @@
 const Admins = require('../models').admins;
 const bcrypt = require('bcrypt');
-// Create a new admin
-// const createAdmin = async (req, res) => {
-//   try {
-//     const { firstname, lastname, email, passwrd } = req.body;
-//     const imagePath = req.file.path;
-
-//     const admin = await Complaints.create({
-//       firstname: firstname,
-//       lastname: lastname,
-//       email: email,
-//       passwrd: passwrd,
-//       photo: imagePath
-//     });
-
-//     return res.status(201).json(admin);
-//   } catch (error) {
-//     return res.status(500).json({ error: error });
-//   }
-// };
 
 const createAdmin = async (req, res) => {
   try {
