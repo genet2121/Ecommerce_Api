@@ -39,14 +39,11 @@ module.exports = function(sequelize, DataTypes) {
     verification_token: {
       type: DataTypes.STRING(10),
       allowNull: true
-    },
+    }
   }, {
     sequelize,
     tableName: 'users',
     timestamps: true,
-    defaultScope: {
-      attributes: { exclude: ['passwrd'] }
-    },
     indexes: [
       {
         name: "PRIMARY",

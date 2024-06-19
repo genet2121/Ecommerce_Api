@@ -1,7 +1,7 @@
 const models = require("../../models");
 // const deps = require("../../configration/dependance");
 
-module.exports = class AuthController {
+module.exports = class AdminAuthController {
 
     dependencies;
 
@@ -11,29 +11,29 @@ module.exports = class AuthController {
 
     async login({ email, password }) {
         try {
-            let user = await models.users.findOne({
+            let admin = await models.admins.findOne({
                 where: {
                     email: email
                 },
                 attributes: ["id", 'email', "passwrd"]
             });
 
-            if (!user.dataValues) {
-                throw this.dependencies.exceptionHandling.throwError("User not found", 404);
+            if (!admin) {
+                throw this.dependencies.exceptionHandling.throwError("Admin not found", 404);
             }
 
-            console.log("found user ", user.dataValues);
+            console.log("found admin ", admin.dataValues);
             
-            const verifyPassword = await this.dependencies.encryption.compare(password, user.dataValues.passwrd);
+            const verifyPassword = await this.dependencies.encryption.compare(password, admin.dataValues.passwrd);
 
             if (!verifyPassword) {
                 throw this.dependencies.exceptionHandling.throwError("Incorrect password", 401);
             } else {
 
-                const token = this.dependencies.tokenGenerator.generate(user.dataValues, this.dependencies.appSecretKey);
+                const token = this.dependencies.tokenGenerator.generate(admin.dataValues, this.dependencies.appSecretKey);
                 return {
                     token,
-                    ...user.dataValues
+                    ...admin.dataValues
                 };
 
             }

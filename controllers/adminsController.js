@@ -1,24 +1,47 @@
 const Admins = require('../models').admins;
-
+const bcrypt = require('bcrypt');
 // Create a new admin
+// const createAdmin = async (req, res) => {
+//   try {
+//     const { firstname, lastname, email, passwrd } = req.body;
+//     const imagePath = req.file.path;
+
+//     const admin = await Complaints.create({
+//       firstname: firstname,
+//       lastname: lastname,
+//       email: email,
+//       passwrd: passwrd,
+//       photo: imagePath
+//     });
+
+//     return res.status(201).json(admin);
+//   } catch (error) {
+//     return res.status(500).json({ error: error });
+//   }
+// };
+
 const createAdmin = async (req, res) => {
   try {
     const { firstname, lastname, email, passwrd } = req.body;
-    const imagePath = req.file.path;
+    const imagePath = req.file ? req.file.path : '';
 
-    const admin = await Complaints.create({
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      passwrd: passwrd,
+    const hashedPassword = await bcrypt.hash(passwrd, 10);
+
+    const admin = await Admins.create({
+      firstname,
+      lastname,
+      email,
+      passwrd: hashedPassword,
       photo: imagePath
     });
 
     return res.status(201).json(admin);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error('Error creating admin:', error); // Log the error details
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 // Get all admins
 const getAllAdmins = async (req, res) => {
