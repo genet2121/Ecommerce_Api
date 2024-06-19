@@ -2,11 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const discountsController = require('../controllers/discountsController');
-const { userValidationRules, validate } = require('../validators/discountsValidator');
+const { discountValidationRules, validate } = require('../validators/discountsValidator');
 
 router.get('/', discountsController.getAllDiscounts);
 router.get('/:id', discountsController.getDiscountById);
-router.post('/', userValidationRules, validate, discountsController.createDiscount);
+router.post('/', discountValidationRules, validate, discountsController.createDiscount);
 router.put('/:id', discountsController.updateDiscount);
 router.delete('/:id', discountsController.deleteDiscount);
 

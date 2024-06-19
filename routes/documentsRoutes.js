@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const router = express.Router();
 const documentsController = require('../controllers/documentsController');
-const { userValidationRules, validate } = require('../validators/documentsValidator');
+const { documentValidationRules, validate } = require('../validators/documentsValidator');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -19,7 +19,7 @@ const upload = multer({ storage: storage });
 
 router.get('/', documentsController.getAllDocuments);
 router.get('/:id', documentsController.getDocumentById);
-router.post('/', upload.single('image'), userValidationRules, validate, documentsController.createDocument);
+router.post('/', upload.single('image'), documentValidationRules, validate, documentsController.createDocument);
 router.put('/:id', documentsController.updateDocument);
 router.delete('/:id', documentsController.deleteDocument);
 
