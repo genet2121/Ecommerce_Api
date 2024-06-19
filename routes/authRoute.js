@@ -1,19 +1,12 @@
 const express = require("express");
 
-
-
 const AuthController = require("../controllers/auth/authController");
-
-
-
 
 module.exports = (dependencies)=> {
 
     const authController = new AuthController(dependencies);
     
-    
     const router = express.Router();
-
 
     router.post('/login', async (req, res, next) => {
         try{

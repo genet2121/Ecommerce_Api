@@ -16,7 +16,7 @@ const getAllBankDetails = async (req, res) => {
     const bankDetails = await BankDetails.findAll();
     return res.status(200).json(bankDetails);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -29,7 +29,7 @@ const getBankDetailById = async (req, res) => {
     }
     return res.status(200).json(bankDetail);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -43,7 +43,7 @@ const updateBankDetail = async (req, res) => {
     await bankDetail.update(req.body);
     return res.status(200).json(bankDetail);
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -57,7 +57,7 @@ const deleteBankDetail = async (req, res) => {
     await bankDetail.destroy();
     return res.status(204).send();
   } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error });
   }
 };
 

@@ -6,7 +6,7 @@ const createCategory = async (req, res) => {
     const { c_name, parent_id,} = req.body;
     const imagePath = req.file.path;
 
-    const category = await Complaints.create({
+    const category = await Categories.create({
       c_name: c_name,
       parent_id: parent_id,
       image: imagePath

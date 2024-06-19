@@ -4,6 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const complaintsController = require('../controllers/complaintsController');
+const { userValidationRules, validate } = require('../validators/complaintsValidator');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 
 router.get('/', complaintsController.getAllComplaints);
 router.get('/:id', complaintsController.getComplaintById);
-router.post('/', upload.single('complaint_images'), complaintsController.createComplaint);
+router.post('/', upload.single('complaint_images'), userValidationRules, validate, complaintsController.createComplaint);
 router.put('/:id', complaintsController.updateComplaint);
 router.delete('/:id', complaintsController.deleteComplaint);
 

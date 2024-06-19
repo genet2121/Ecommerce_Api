@@ -2,11 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const ordersController = require('../controllers/ordersController');
-const auth = require('../infrastructure/service/authentatication/auth');
+const { userValidationRules, validate } = require('../validators/ordersValidator');
 
-router.get('/', auth.authenticate(["admin", "buyer", "seller"]), ordersController.getAllOrders);
+router.get('/', ordersController.getAllOrders);
 router.get('/:id', ordersController.getOrderById);
-router.post('/', ordersController.createOrder);
+router.post('/', userValidationRules, validate, ordersController.createOrder);
 router.put('/:id', ordersController.updateOrder);
 router.delete('/:id', ordersController.deleteOrder);
 

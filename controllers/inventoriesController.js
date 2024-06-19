@@ -50,7 +50,7 @@ const updateInventory = async (req, res) => {
 // Delete inventory entry by ID
 const deleteInventory = async (req, res) => {
   try {
-    const inventory = await Inventory.findByPk(req.params.id);
+    const inventory = await Inventories.findByPk(req.params.id);
     if (!inventory) {
       return res.status(404).json({ error: 'Inventory entry not found' });
     }

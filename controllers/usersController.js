@@ -1,11 +1,9 @@
-
-
 const Encryption = require('../infrastructure/service/authentatication/encripution'); 
 const { users: Users } = require('../models'); 
 const { sendEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');
 
-
+// Create new user 
 const createUser = async (req, res) => {
   try {
     const { username, business_name, email, passwrd, user_type } = req.body;
@@ -18,13 +16,13 @@ const createUser = async (req, res) => {
     const hashedPassword = await encryption.hash(passwrd);
     const token = generateVerificationToken();
     const user = await Users.create({
-       username, 
-       business_name, 
-       email, 
-       passwrd: hashedPassword, 
-       user_type, 
-       verified: false, 
-       verification_token: token });
+      username: username, 
+      business_name: business_name, 
+      email: email, 
+      passwrd: hashedPassword, 
+      user_type: user_type, 
+      verified: false, 
+      verification_token: token });
 
     const url = `http://localhost:8080/api/users/verify/${user.id}/${token}`;
     let msg = `Please click <a href="${url}">here</a> to verify your email.`
@@ -38,7 +36,7 @@ const createUser = async (req, res) => {
   }
 };
 
-
+// Verify user
 const verifyUser = async (req, res) => {
   try {
     const { token, id } = req.params;
@@ -62,7 +60,7 @@ const verifyUser = async (req, res) => {
   }
 };
 
-// Upload user image
+// Upload/change user image by ID
 const uploadImage = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -79,6 +77,7 @@ const uploadImage = async (req, res) => {
   }
 };
 
+// Get all users
 const getAllUsers = async (req, res) => {
   try {
     const users = await Users.findAll({
@@ -86,15 +85,13 @@ const getAllUsers = async (req, res) => {
     });
     res.status(200).json(users);
   } catch (error) {
-
     console.error('Error fetching users:', error); 
-    res.status(500).json({ error: 'Internal server error' });
-
     return res.status(500).json({ error: error });
 
   }
 };
 
+// Get users by ID
 const getUserById = async (req, res) => {
   try {
     const user = await Users.findByPk(req.params.id, {
@@ -105,15 +102,13 @@ const getUserById = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
-
     console.error('Error fetching user:', error); 
-    res.status(500).json({ error: 'Internal server error' });
-
     return res.status(500).json({ error: error });
 
   }
 };
 
+// Update users by ID
 const updateUser = async (req, res) => {
   try {
     const user = await Users.findByPk(req.params.id);
@@ -123,15 +118,13 @@ const updateUser = async (req, res) => {
     await user.update(req.body);
     res.status(200).json(user);
   } catch (error) {
-
     console.error('Error updating user:', error); 
-    res.status(500).json({ error: 'Internal server error' });
-
     return res.status(500).json({ error: error });
 
   }
 };
 
+// Delete user by ID
 const deleteUser = async (req, res) => {
   try {
     const user = await Users.findByPk(req.params.id);
@@ -142,10 +135,7 @@ const deleteUser = async (req, res) => {
     res.status(204).send();
   } catch (error) {
     console.error('Error deleting user:', error); 
-    res.status(500).json({ error: 'Internal server error' });
-
     return res.status(500).json({ error: error });
-
   }
 };
 
