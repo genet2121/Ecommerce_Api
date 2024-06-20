@@ -100,6 +100,8 @@ function initModels(sequelize) {
   users.hasMany(user_addresses, { as: "user_addresses", foreignKey: "user_id"});
   user_subscriptions.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(user_subscriptions, { as: "user_subscriptions", foreignKey: "user_id"});
+  users.belongsTo(users, { as: "ref_user_user", foreignKey: "ref_user"});
+  users.hasMany(users, { as: "users", foreignKey: "ref_user"});
 
   return {
     admins,

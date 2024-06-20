@@ -2,8 +2,16 @@ const { body, validationResult } = require('express-validator');
 
 const userValidationRules = [
   body('username')
-    .notEmpty()
-    .isString().withMessage('Username is required'),
+    .notEmpty().withMessage('Username is required')
+    .isString(),
+  
+  body('firstname')
+    .notEmpty().withMessage('Firstname is required')
+    .isString(),
+
+  body('lastname')
+    .notEmpty().withMessage('Lastname is required')
+    .isString(),
 
   body('business_name')
     .optional(),
