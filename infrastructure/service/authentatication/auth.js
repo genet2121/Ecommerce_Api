@@ -4,7 +4,7 @@ const deps = (new dependencies()).getDependencies()
 
 const tokenGenerator = new TokenGenerator(); 
 module.exports = {
-    authenticate: (roles) => {
+    authorize: (roles) => {
         return async (req, res, next) => {
             try {           
                 console.log("Authenticating request...");

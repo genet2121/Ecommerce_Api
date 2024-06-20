@@ -1,5 +1,5 @@
+
 const models = require("../../models");
-// const deps = require("../../configration/dependance");
 
 module.exports = class AdminAuthController {
 
@@ -22,6 +22,8 @@ module.exports = class AdminAuthController {
                 throw this.dependencies.exceptionHandling.throwError("Admin not found", 404);
             }
 
+            admin.dataValues.user_type = 'admin'; 
+
             console.log("found admin ", admin.dataValues);
             
             const verifyPassword = await this.dependencies.encryption.compare(password, admin.dataValues.passwrd);
@@ -29,13 +31,11 @@ module.exports = class AdminAuthController {
             if (!verifyPassword) {
                 throw this.dependencies.exceptionHandling.throwError("Incorrect password", 401);
             } else {
-
                 const token = this.dependencies.tokenGenerator.generate(admin.dataValues, this.dependencies.appSecretKey);
                 return {
                     token,
                     ...admin.dataValues
                 };
-
             }
 
         } catch (error) {
@@ -49,7 +49,8 @@ module.exports = class AdminAuthController {
     }
 
     async logOut() {
-        // Log out logic if needed
+        
     }
 
 }
+

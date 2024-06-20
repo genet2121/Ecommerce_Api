@@ -15,7 +15,7 @@ module.exports = class AuthController {
                 where: {
                     email: email
                 },
-                attributes: ["id", 'email', "passwrd"]
+                attributes: ["id", 'email', "passwrd", "user_type"]
             });
 
             if (!user.dataValues) {
