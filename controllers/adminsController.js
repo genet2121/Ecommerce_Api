@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const createAdmin = async (req, res) => {
   try {
     const { firstname, lastname, email, passwrd } = req.body;
-    const imagePath = req.file.path;
+    const photoPath = req.file.path;
 
     const hashedPassword = await bcrypt.hash(passwrd, 10);
 
@@ -13,7 +13,7 @@ const createAdmin = async (req, res) => {
       lastname: lastname,
       email: email,
       passwrd: hashedPassword,
-      photo: imagePath
+      photo: photoPath
     });
 
     return res.status(201).json(admin);
@@ -50,12 +50,15 @@ const getAdminById = async (req, res) => {
 const updateAdmin = async (req, res) => {
   try {
     const admin = await Admins.findByPk(req.params.id);
+    const photoPath = req.file.path;
     if (!admin) {
       return res.status(404).json({ error: 'Admin not found' });
     }
     await admin.update(req.body);
+    await admin.update({ photo: photoPath });
     return res.status(200).json(admin);
   } catch (error) {
+    console.error('Error updating admin:', error); 
     return res.status(500).json({ error: error });
   }
 };

@@ -3,14 +3,29 @@ const { body, validationResult } = require('express-validator');
 const complaintValidationRules = [
   body('topic')
     .notEmpty()
-    .withMessage('Topic is required'),
+    .isString().withMessage('Topic is required'),
+
   body('complainee_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Complainee ID must be an integer'),
+    .isInt().withMessage('Complainee ID must be an integer'),
+
   body('complaint_text')
     .notEmpty()
-    .withMessage('Complaint text is required')
+    .isString().withMessage('Complaint text is required')
+];
+
+const complaintUpdateValidationRules = [
+  body('topic')
+    .optional()
+    .isString().withMessage('Topic is required'),
+
+  body('complainee_id')
+    .optional()
+    .isInt().withMessage('Complainee ID must be an integer'),
+
+  body('complaint_text')
+    .optional()
+    .isString().withMessage('Complaint text is required')
 ];
 
 const validate = (req, res, next) => {
@@ -23,5 +38,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   complaintValidationRules,
+  complaintUpdateValidationRules,
   validate,
 };

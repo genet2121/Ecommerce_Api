@@ -3,11 +3,21 @@ const { body, validationResult } = require('express-validator');
 const paymentMethodValidationRules = [
   body('method_name')
     .notEmpty()
-    .withMessage('Method name is required'),
+    .isString().withMessage('Method name is required'),
+
   body('payment_type')
-    .isIn(['bank', 'wallet', 'other'])
     .notEmpty()
-    .withMessage('Invalid payment type')
+    .isIn(['bank', 'wallet', 'other']).withMessage('Invalid payment type')
+];
+
+const paymentMethodUpdateValidationRules = [
+  body('method_name')
+    .optional()
+    .isString().withMessage('Method name is required'),
+
+  body('payment_type')
+    .optional()
+    .isIn(['bank', 'wallet', 'other']).withMessage('Invalid payment type')
 ];
 
 const validate = (req, res, next) => {
@@ -20,5 +30,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   paymentMethodValidationRules,
+  paymentMethodUpdateValidationRules,
   validate,
 };

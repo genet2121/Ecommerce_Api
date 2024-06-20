@@ -1,5 +1,7 @@
 
 const models = require("../../models");
+const deps = require("../../configration/dependance");
+
 
 module.exports = class AdminAuthController {
 

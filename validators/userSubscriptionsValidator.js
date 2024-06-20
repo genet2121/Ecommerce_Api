@@ -2,27 +2,50 @@ const { body, validationResult } = require('express-validator');
 
 const userSubscriptionValidationRules = [
   body('user_id')
-    .isInt()
     .notEmpty()
-    .withMessage('User ID must be an integer'),
+    .isInt().withMessage('User ID must be an integer'),
+
   body('subscription_plan_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Subscription plan ID must be an integer'),
+    .isInt().withMessage('Subscription plan ID must be an integer'),
+
   body('start_date')
-    .notEmpty()
-    .withMessage('Start date is required')
+    .notEmpty().withMessage('Start date is required')
     .isISO8601()
     .toDate(),
+
   body('end_date')
-    .notEmpty()
-    .withMessage('End date is required')
+    .notEmpty().withMessage('End date is required')
     .isISO8601()
     .toDate(),
+
   body('status_in')
     .notEmpty()
-    .isIn(['active', 'expired'])
-    .withMessage('Invalid status')
+    .isIn(['active', 'expired']).withMessage('Invalid status')
+];
+
+const userSubscriptionUpdateValidationRules = [
+  body('user_id')
+    .optional()
+    .isInt().withMessage('User ID must be an integer'),
+
+  body('subscription_plan_id')
+    .optional()
+    .isInt().withMessage('Subscription plan ID must be an integer'),
+
+  body('start_date')
+    .optional()
+    .isISO8601()
+    .toDate(),
+
+  body('end_date')
+    .optional()
+    .isISO8601()
+    .toDate(),
+
+  body('status_in')
+    .optional()
+    .isIn(['active', 'expired']).withMessage('Invalid status')
 ];
 
 const validate = (req, res, next) => {
@@ -35,5 +58,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   userSubscriptionValidationRules,
+  userSubscriptionUpdateValidationRules,
   validate,
 };

@@ -3,32 +3,39 @@ const { body, validationResult } = require('express-validator');
 const adminValidationRules = [
   body('firstname')
     .notEmpty()
-    .withMessage('First name is required'),
+    .isString().withMessage('First name is required'),
+
   body('lastname')
     .notEmpty()
-    .withMessage('Last name is required'),
+    .isString().withMessage('Last name is required'),
+
   body('email')
-    .isEmail()
     .notEmpty()
-    .withMessage('Please enter a valid email address')
+    .isEmail().withMessage('Please enter a valid email address')
     .normalizeEmail(),
+    
   body('passwrd')
-    .isLength({ min: 6 })
     .notEmpty()
-    .withMessage('Password must be at least 6 characters long'),
-  body('photo')
-    .custom((value, { req }) => {
-      if (!req.file) {
-        throw new Error('Photo is required.');
-      }
-      // Check if file type is image
-      const allowedExtensions = ['jpg', 'jpeg', 'png'];
-      const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
-      if (!allowedExtensions.includes(fileExtension)) {
-        throw new Error('Only JPG, JPEG, or PNG files are allowed.');
-      }
-      return true;
-    }).notEmpty(),
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+];
+
+const adminUpdateValidationRules = [
+  body('firstname')
+    .optional()
+    .isString().withMessage('First name is required'),
+
+  body('lastname')
+    .optional()
+    .isString().withMessage('Last name is required'),
+
+  body('email')
+    .optional()
+    .isEmail().withMessage('Please enter a valid email address')
+    .normalizeEmail(),
+    
+  body('passwrd')
+    .optional()
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
 ];
 
 const validate = (req, res, next) => {
@@ -41,5 +48,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   adminValidationRules,
+  adminUpdateValidationRules,
   validate,
 };

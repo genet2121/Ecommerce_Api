@@ -2,26 +2,60 @@ const { body, validationResult } = require('express-validator');
 
 const userAddressValidationRules = [
   body('user_id')
-    .isInt()
     .notEmpty()
-    .withMessage('User ID must be an integer'),
+    .isInt().withMessage('User ID must be an integer'),
+
   body('address_line1')
     .notEmpty()
-    .withMessage('Address Line 1 is required'),
+    .isString().withMessage('Address Line 1 is required'),
+
   body('address_line2')
     .optional(),
+
   body('city')
     .notEmpty()
-    .withMessage('City is required'),
+    .isString().withMessage('City is required'),
+
   body('state')
     .notEmpty()
-    .withMessage('State is required'),
+    .isString().withMessage('State is required'),
+
   body('postal_code')
     .notEmpty()
-    .withMessage('Postal code is required'),
+    .isString().withMessage('Postal code is required'),
+
   body('country')
     .notEmpty()
-    .withMessage('Country is required')
+    .isString().withMessage('Country is required')
+];
+
+const userAddressUpdateValidationRules = [
+  body('user_id')
+    .notEmpty()
+    .isInt().withMessage('User ID must be an integer'),
+
+  body('address_line1')
+    .notEmpty()
+    .isString().withMessage('Address Line 1 is required'),
+
+  body('address_line2')
+    .optional(),
+
+  body('city')
+    .notEmpty()
+    .isString().withMessage('City is required'),
+
+  body('state')
+    .notEmpty()
+    .isString().withMessage('State is required'),
+
+  body('postal_code')
+    .notEmpty()
+    .isString().withMessage('Postal code is required'),
+
+  body('country')
+    .notEmpty()
+    .isString().withMessage('Country is required')
 ];
 
 const validate = (req, res, next) => {
@@ -34,5 +68,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   userAddressValidationRules,
+  userAddressUpdateValidationRules,
   validate,
 };
