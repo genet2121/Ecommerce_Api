@@ -16,18 +16,11 @@ const userValidationRules = [
   body('passwrd')
     .notEmpty()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-
-  body('image')
-    .notEmpty()
+  
+  body('confirm_password')
     .custom((value, { req }) => {
-      if (!req.file) {
-        throw new Error('Image is required.');
-      }
-      // Check if file type is image
-      const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-      const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
-      if (!allowedExtensions.includes(fileExtension)) {
-        throw new Error('Only JPG, JPEG, PNG, or GIF files are allowed.');
+      if (value !== req.body.passwrd) {
+        throw new Error('Passwords do not match');
       }
       return true;
     }),
@@ -57,21 +50,6 @@ const userUpdateValidationRules = [
   body('passwrd')
     .optional()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-
-  body('image')
-    .optional()
-    .custom((value, { req }) => {
-      if (!req.file) {
-        throw new Error('Image is required.');
-      }
-      // Check if file type is image
-      const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-      const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
-      if (!allowedExtensions.includes(fileExtension)) {
-        throw new Error('Only JPG, JPEG, PNG, or GIF files are allowed.');
-      }
-      return true;
-    }),
 
   body('verified')
     .optional()

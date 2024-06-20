@@ -22,6 +22,8 @@ const walletDetailsRoutes = require('./routes/walletDetailsRoutes');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const ProjectDependencies = require("./configration/dependance");
@@ -31,11 +33,14 @@ const authRouter = require("./routes/authRoute");
 const adminAuthRouter = require("./routes/adminAuthRoute");
 
 const app = express();
+const morgan = require('morgan');
 
 // Middleware
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+app.use(morgan('combined', { stream: accessLogStream })); 
 
 // Routes
 app.get('/', (req, res) => {

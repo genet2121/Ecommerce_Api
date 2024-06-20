@@ -5,8 +5,6 @@ const categoryValidationRules = [
     .notEmpty()
     .isString().withMessage('Category name is required'),
 
-  body('image'),
-
   body('parent_id')
     .notEmpty()
     .isInt().withMessage('Parent ID must be an integer')
@@ -16,8 +14,6 @@ const categoryUpdateValidationRules = [
   body('c_name')
     .optional()
     .isString().withMessage('Category name is required'),
-
-  body('image'),
 
   body('parent_id')
     .optional()

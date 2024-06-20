@@ -17,8 +17,6 @@ const adminValidationRules = [
   body('passwrd')
     .notEmpty()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-    
-  body('photo')
 ];
 
 const adminUpdateValidationRules = [
@@ -38,8 +36,6 @@ const adminUpdateValidationRules = [
   body('passwrd')
     .optional()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-    
-  body('photo')
 ];
 
 const validate = (req, res, next) => {
