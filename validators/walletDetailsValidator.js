@@ -2,15 +2,30 @@ const { body, validationResult } = require('express-validator');
 
 const walletDetailValidationRules = [
   body('payment_method_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Payment method ID must be an integer'),
+    .isInt().withMessage('Payment method ID must be an integer'),
+
   body('wallet_name')
     .notEmpty()
-    .withMessage('Wallet name is required'),
+    .isString().withMessage('Wallet name is required'),
+
   body('phone_number')
     .notEmpty()
-    .withMessage('Phone number is required')
+    .isInt().withMessage('Phone number is required')
+];
+
+const walletDetailUpdateValidationRules = [
+  body('payment_method_id')
+    .optional()
+    .isInt().withMessage('Payment method ID must be an integer'),
+
+  body('wallet_name')
+    .optional()
+    .isString().withMessage('Wallet name is required'),
+
+  body('phone_number')
+    .optional()
+    .isInt().withMessage('Phone number is required')
 ];
 
 const validate = (req, res, next) => {
@@ -23,5 +38,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   walletDetailValidationRules,
+  walletDetailUpdateValidationRules,
   validate,
 };

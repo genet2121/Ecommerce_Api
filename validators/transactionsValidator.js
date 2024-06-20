@@ -2,29 +2,54 @@ const { body, validationResult } = require('express-validator');
 
 const transactionValidationRules = [
   body('buyer_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Buyer ID must be an integer'),
+    .isInt().withMessage('Buyer ID must be an integer'),
+
   body('seller_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Seller ID must be an integer'),
+    .isInt().withMessage('Seller ID must be an integer'),
+
   body('product_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Product ID must be an integer'),
+    .isInt().withMessage('Product ID must be an integer'),
+
   body('amount')
-    .isFloat({ gt: 0 })
     .notEmpty()
-    .withMessage('Amount must be greater than 0'),
+    .isFloat({ gt: 0 }).withMessage('Amount must be greater than 0'),
+
   body('status_in')
-    .isIn(['pending', 'completed', 'failed'])
     .notEmpty()
-    .withMessage('Invalid status'),
+    .isIn(['pending', 'completed', 'failed']).withMessage('Invalid status'),
+
   body('payment_method_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Payment method ID must be an integer')
+    .isInt().withMessage('Payment method ID must be an integer')
+];
+
+const transactionUpdateValidationRules = [
+  body('buyer_id')
+    .optional()
+    .isInt().withMessage('Buyer ID must be an integer'),
+
+  body('seller_id')
+    .optional()
+    .isInt().withMessage('Seller ID must be an integer'),
+
+  body('product_id')
+    .optional()
+    .isInt().withMessage('Product ID must be an integer'),
+
+  body('amount')
+    .optional()
+    .isFloat({ gt: 0 }).withMessage('Amount must be greater than 0'),
+
+  body('status_in')
+    .optional()
+    .isIn(['pending', 'completed', 'failed']).withMessage('Invalid status'),
+
+  body('payment_method_id')
+    .optional()
+    .isInt().withMessage('Payment method ID must be an integer')
 ];
 
 const validate = (req, res, next) => {
@@ -37,5 +62,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   transactionValidationRules,
+  transactionUpdateValidationRules,
   validate,
 };

@@ -2,29 +2,59 @@ const { body, validationResult } = require('express-validator');
 
 const orderValidationRules = [
   body('buyer_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Buyer ID must be an integer'),
+    .isInt().withMessage('Buyer ID must be an integer'),
+
   body('seller_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Seller ID must be an integer'),
+    .isInt().withMessage('Seller ID must be an integer'),
+
   body('product_id')
-    .isInt()
     .notEmpty()
-    .withMessage('Product ID must be an integer'),
+    .isInt().withMessage('Product ID must be an integer'),
+
   body('expd_delivery')
     .notEmpty()
-    .withMessage('Expected delivery date is required'),
+    .isISO8601()
+    .toDate().withMessage('Expected delivery date is required'),
+
   body('total_amount')
-    .isFloat({ gt: 0 })
     .notEmpty()
-    .withMessage('Total amount must be greater than 0'),
+    .isFloat({ gt: 0 }).withMessage('Total amount must be greater than 0'),
+
   body('status_in')
-    .isIn(['pending', 'processing', 'shipped', 'delivered'])
     .notEmpty()
+    .isIn(['pending', 'processing', 'shipped', 'delivered'])
     .withMessage('Invalid status')
 ];
+
+const orderUpdateValidationRules = [
+  body('buyer_id')
+    .notEmpty()
+    .isInt().withMessage('Buyer ID must be an integer'),
+
+  body('seller_id')
+    .optional()
+    .isInt().withMessage('Seller ID must be an integer'),
+
+  body('product_id')
+    .optional()
+    .isInt().withMessage('Product ID must be an integer'),
+
+  body('expd_delivery')
+    .optional()
+    .isISO8601()
+    .toDate().withMessage('Expected delivery date is required'),
+
+  body('total_amount')
+    .optional()
+    .isFloat({ gt: 0 }).withMessage('Total amount must be greater than 0'),
+
+  body('status_in')
+    .optional()
+    .isIn(['pending', 'processing', 'shipped', 'delivered']).withMessage('Invalid status')
+];
+
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -36,5 +66,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   orderValidationRules,
+  orderUpdateValidationRules,
   validate,
 };

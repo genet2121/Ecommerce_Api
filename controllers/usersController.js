@@ -60,23 +60,6 @@ const verifyUser = async (req, res) => {
   }
 };
 
-// Upload/change user image by ID
-const uploadImage = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const imagePath = req.file.path;
-    const user = await Users.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    await user.update({ image: imagePath });
-    return res.status(200).json(user);
-  } catch (error) {
-    return res.status(500).json({ error: error });
-
-  }
-};
-
 // Get all users
 const getAllUsers = async (req, res) => {
   try {
@@ -112,10 +95,12 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const user = await Users.findByPk(req.params.id);
+    const imagePath = req.file.path;
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     await user.update(req.body);
+    await user.update({ image: imagePath });
     res.status(200).json(user);
   } catch (error) {
     console.error('Error updating user:', error); 
@@ -141,7 +126,6 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   createUser,
-  uploadImage,
   getAllUsers,
   getUserById,
   updateUser,

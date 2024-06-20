@@ -4,12 +4,12 @@ const Documents = require('../models').documents;
 const createDocument = async (req, res) => {
   try {
     const { user_id, doc_type } = req.body;
-    const imagePath = req.file.path;
+    const filePath = req.file.path;
 
     const document = await Documents.create({
       user_id: user_id,
       doc_type: doc_type,
-      image: imagePath
+      doc: filePath
     });
 
     return res.status(201).json(document);
@@ -45,10 +45,12 @@ const getDocumentById = async (req, res) => {
 const updateDocument = async (req, res) => {
   try {
     const document = await Documents.findByPk(req.params.id);
+    const filePath = req.file.path;
     if (!document) {
       return res.status(404).json({ error: 'Document not found' });
     }
     await document.update(req.body);
+    await document.update({ doc: filePath });
     return res.status(200).json(document);
   } catch (error) {
     return res.status(500).json({ error: error });

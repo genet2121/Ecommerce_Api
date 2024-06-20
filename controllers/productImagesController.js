@@ -44,10 +44,12 @@ const getProductImageById = async (req, res) => {
 const updateProductImage = async (req, res) => {
   try {
     const productImage = await ProductImages.findByPk(req.params.id);
+    const imagePath = req.file.path;
     if (!productImage) {
       return res.status(404).json({ error: 'Product image not found' });
     }
     await productImage.update(req.body);
+    await productImage.update({ image: imagePath });
     return res.status(200).json(productImage);
   } catch (error) {
     return res.status(500).json({ error: error });

@@ -2,12 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const reviewsController = require('../controllers/reviewsController');
-const { reviewValidationRules, validate } = require('../validators/reviewsValidator');
+const { reviewValidationRules, reviewUpdateValidationRules, validate } = require('../validators/reviewsValidator');
 
 router.get('/', reviewsController.getAllReviews);
 router.get('/:id', reviewsController.getReviewById);
 router.post('/', reviewValidationRules, validate, reviewsController.createReview);
-router.put('/:id', reviewsController.updateReview);
+router.put('/:id', reviewUpdateValidationRules, validate, reviewsController.updateReview);
 router.delete('/:id', reviewsController.deleteReview);
 
 module.exports = router;
