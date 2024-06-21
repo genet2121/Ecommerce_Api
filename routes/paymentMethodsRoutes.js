@@ -1,5 +1,7 @@
 // paymentMethodsRoutes.js
 const express = require('express');
+const auth = require('../infrastructure/service/authentatication/auth');
+const Roles = require("../configration/enum");
 const router = express.Router();
 const paymentMethodsController = require('../controllers/paymentMethodsController');
 const { paymentMethodValidationRules, paymentMethodUpdateValidationRules, validate } = require('../validators/paymentMethodsValidator');

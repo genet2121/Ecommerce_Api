@@ -1,4 +1,6 @@
 // transactionsRoutes.js
+const auth = require('../infrastructure/service/authentatication/auth');
+const Roles = require("../configration/enum");
 const express = require('express');
 const router = express.Router();
 const transactionsController = require('../controllers/transactionsController');

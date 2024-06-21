@@ -33,7 +33,7 @@ module.exports = class AdminAuthController {
             if (!verifyPassword) {
                 throw this.dependencies.exceptionHandling.throwError("Incorrect password", 401);
             } else {
-                const token = this.dependencies.tokenGenerator.generate(admin.dataValues, this.dependencies.appSecretKey);
+                const token = this.dependencies.tokenGenerator.generate(admin.dataValues, this.dependencies.appSecretKey, '24h');
                 return {
                     token,
                     ...admin.dataValues

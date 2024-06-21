@@ -1,4 +1,6 @@
 // usersRoutes.js
+const auth = require('../infrastructure/service/authentatication/auth');
+const Roles = require("../configration/enum");
 const express = require('express');
 const multer = require('multer');
 const path = require('path');

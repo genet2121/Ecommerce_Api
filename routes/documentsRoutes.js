@@ -2,6 +2,8 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const auth = require('../infrastructure/service/authentatication/auth');
+const Roles = require("../configration/enum");
 const router = express.Router();
 const documentsController = require('../controllers/documentsController');
 const { documentValidationRules, documentUpdateValidationRules, validate } = require('../validators/documentsValidator');

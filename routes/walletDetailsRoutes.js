@@ -1,4 +1,6 @@
 // walletDetailsRoutes.js
+const auth = require('../infrastructure/service/authentatication/auth');
+const Roles = require("../configration/enum");
 const express = require('express');
 const router = express.Router();
 const walletDetailsController = require('../controllers/walletDetailsController');

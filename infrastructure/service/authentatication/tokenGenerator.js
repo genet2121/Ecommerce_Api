@@ -6,8 +6,8 @@ module.exports = class TokenGenerator {
 
     }
 
-    generate(payload, secretId){
-        const token = jwt.sign(payload, secretId);
+    generate(payload, secretId, expiresIn = '24h'){
+        const token = jwt.sign(payload, secretId, {expiresIn});
         return token;
     }
 
