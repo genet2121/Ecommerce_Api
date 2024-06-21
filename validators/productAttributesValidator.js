@@ -3,11 +3,11 @@ const { body, validationResult } = require('express-validator');
 const productAttributesValidationRules = [
   body('product_id')
     .notEmpty()
-    .isInt().withMessage('Seller ID must be an integer'),
+    .isInt().withMessage('Product id must be an integer'),
 
   body('category_attribute_id')
     .notEmpty()
-    .isInt().withMessage('Product ID must be an integer'),
+    .isInt().withMessage('Attribute id must be an integer'),
 
   body('attribute_value')
     .notEmpty()
@@ -17,11 +17,11 @@ const productAttributesValidationRules = [
 const productAttributesUpdateValidationRules = [
   body('product_id')
   .optional()
-  .isInt().withMessage('Seller ID must be an integer'),
+  .isInt().withMessage('Product id must be an integer'),
 
 body('category_attribute_id')
   .optional()
-  .isInt().withMessage('Product ID must be an integer'),
+  .isInt().withMessage('Attribute id must be an integer'),
 
 body('attribute_value')
   .optional()

@@ -41,14 +41,14 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_product_attributes_product",
+        name: "fk_product_attributes_products",
         using: "BTREE",
         fields: [
           { name: "product_id" },
         ]
       },
       {
-        name: "fk_product_attributes_category_attribute",
+        name: "fk_product_attributes_category_attributes",
         using: "BTREE",
         fields: [
           { name: "category_attribute_id" },

@@ -3,8 +3,8 @@ const TableNames = require('../models').tableNames;
 // Create a new table name
 const createTableName = async (req, res) => {
   try {
-    const tableName = await TableNames.create(req.body);
-    return res.status(201).json(tableName);
+    const tableNames = await TableNames.create(req.body);
+    return res.status(201).json(tableNames);
   } catch (error) {
     return res.status(500).json({ error: error });
   }

@@ -13,8 +13,8 @@ const createAdminType = async (req, res) => {
 // Get all admin type
 const getAllAdminTypes = async (req, res) => {
   try {
-    const adminType = await AdminTypes.findAll();
-    return res.status(200).json(adminType);
+    const adminTypes = await AdminTypes.findAll();
+    return res.status(200).json(adminTypes);
   } catch (error) {
     return res.status(500).json({ error: error });
   }

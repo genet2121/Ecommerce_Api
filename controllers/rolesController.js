@@ -13,8 +13,8 @@ const createRole = async (req, res) => {
 // Get all roles
 const getAllRoles = async (req, res) => {
   try {
-    const role = await Roles.findAll();
-    return res.status(200).json(role);
+    const roles = await Roles.findAll();
+    return res.status(200).json(roles);
   } catch (error) {
     return res.status(500).json({ error: error });
   }

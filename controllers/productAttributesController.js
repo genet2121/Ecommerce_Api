@@ -13,8 +13,8 @@ const createProductAttribute = async (req, res) => {
 // Get all product attributes
 const getAllProductAttributes = async (req, res) => {
   try {
-    const productAttribute = await ProductAttributes.findAll();
-    return res.status(200).json(productAttribute);
+    const productAttributes = await ProductAttributes.findAll();
+    return res.status(200).json(productAttributes);
   } catch (error) {
     return res.status(500).json({ error: error });
   }
