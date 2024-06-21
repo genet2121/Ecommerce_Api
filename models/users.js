@@ -7,6 +7,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    firstname: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    lastname: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
     username: {
       type: DataTypes.STRING(255),
       allowNull: false
@@ -20,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: "email"
     },
-    passwrd: {
+    password: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
@@ -39,6 +47,14 @@ module.exports = function(sequelize, DataTypes) {
     verification_token: {
       type: DataTypes.STRING(10),
       allowNull: true
+    },
+    ref_user: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -59,6 +75,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "email" },
+        ]
+      },
+      {
+        name: "fk_user_id_ref_user",
+        using: "BTREE",
+        fields: [
+          { name: "ref_user" },
         ]
       },
     ]

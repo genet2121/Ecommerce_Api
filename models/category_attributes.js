@@ -18,10 +18,6 @@ module.exports = function(sequelize, DataTypes) {
     attribute_name: {
       type: DataTypes.STRING(255),
       allowNull: false
-    },
-    attribute_value: {
-      type: DataTypes.STRING(255),
-      allowNull: false
     }
   }, {
     sequelize,
@@ -37,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_category_attributes_categories",
+        name: "fk_category_attributes_category",
         using: "BTREE",
         fields: [
           { name: "category_id" },

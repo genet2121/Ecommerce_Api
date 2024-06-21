@@ -1,11 +1,19 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('admins', {
+  return sequelize.define('roles', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
+    },
+    table_name_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'table_names',
+        key: 'id'
+      }
     },
     admin_type_id: {
       type: DataTypes.INTEGER,
@@ -15,30 +23,29 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    firstname: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    can_view: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     },
-    lastname: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    can_add: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     },
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: "email"
+    can_view_detail: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    can_update: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     },
-    photo: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    can_delete: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'admins',
+    tableName: 'roles',
     timestamps: true,
     indexes: [
       {
@@ -50,15 +57,14 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "email",
-        unique: true,
+        name: "fk_roles_table_names",
         using: "BTREE",
         fields: [
-          { name: "email" },
+          { name: "table_name_id" },
         ]
       },
       {
-        name: "fk_admins_admin_types",
+        name: "fk_roles_admin_types",
         using: "BTREE",
         fields: [
           { name: "admin_type_id" },
