@@ -1,31 +1,61 @@
 const dependencies = require("../../../configration/dependance");
 const TokenGenerator = require("../../../infrastructure/service/authentatication/tokenGenerator");
-const deps = (new dependencies()).getDependencies()
+const Roles = require("../../../models").roles;
+const Tables = require("../../../models").table_names; 
+const deps = (new dependencies()).getDependencies();
 
-const tokenGenerator = new TokenGenerator(); 
+const tokenGenerator = new TokenGenerator();
+
 module.exports = {
-    authorize: (roles) => {
+    authorize: (action, tableName) => {
         return async (req, res, next) => {
-            try {           
+            try {
                 console.log("Authenticating request...");
                 if (!req.headers.authorization) {
                     console.error("Authorization header missing");
-                    throw deps.exceptionHandling.throwError("Unauthorized! token not found man", 401);
-                } else {
-                    const token = req.headers.authorization.split(" ")[1];
-                    console.log("Token received:", token);
-                    const user = await tokenGenerator.verify(token, deps.appSecretKey);
-                    console.log("User verified:", user);
-                    console.log("User user_type:", user.user_type);
-
-                    if (!roles.includes(user.user_type)) {
-                        console.error("User role unauthorized:", user.user_type);
-                        throw deps.exceptionHandling.throwError("Unauthorized user!", 401);
-                    }
-
-                    req.user = user;
-                    next();
+                    throw deps.exceptionHandling.throwError("Unauthorized! Token not found", 401);
                 }
+
+                const token = req.headers.authorization.split(" ")[1];
+                console.log("Token received:", token);
+                const user = await tokenGenerator.verify(token, deps.appSecretKey);
+                console.log("User verified:", user);
+                console.log("admin admin_type:", user.admin_type_id);
+
+               
+                const table = await Tables.findOne({
+                    where: {
+                        tab_name: tableName
+                    }
+                });
+
+                if (!table) {
+                    console.error("Table not found:", tableName);
+                    throw deps.exceptionHandling.throwError(`${tableName} table not found on database`, 404);
+                }
+
+                const table_name_id = table.id;
+                console.log("Table ID:", table_name_id);
+                const roles = await Roles.findAll({
+                    where: {
+                        admin_type_id: user.admin_type_id,
+                        table_name_id: table_name_id
+                    }
+                });
+
+                if (!roles || roles.length === 0) {
+                    console.error("No roles found for user with the specified table_name_id");
+                    throw deps.exceptionHandling.throwError("Unauthorized user!", 401);
+                }
+
+                const hasPermission = roles.some(role => role[action]);
+                if (!hasPermission) {
+                    console.error(`User does not have permission to ${action} on table_name_id ${table_name_id}`);
+                    throw deps.exceptionHandling.throwError("Unauthorized user!", 401);
+                }
+
+                req.user = user;
+                next();
             } catch (error) {
                 console.error("Authentication error:", error);
                 if (error.statusCode) {
@@ -37,5 +67,3 @@ module.exports = {
         };
     }
 };
-
-

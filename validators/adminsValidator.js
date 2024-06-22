@@ -14,7 +14,7 @@ const adminValidationRules = [
     .isEmail().withMessage('Please enter a valid email address')
     .normalizeEmail(),
     
-  body('passwrd')
+  body('password')
     .notEmpty()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
 ];
@@ -33,7 +33,7 @@ const adminUpdateValidationRules = [
     .isEmail().withMessage('Please enter a valid email address')
     .normalizeEmail(),
     
-  body('passwrd')
+  body('password')
     .optional()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
 ];

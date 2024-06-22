@@ -6,9 +6,9 @@ const router = express.Router();
 const adminTypesController = require('../controllers/adminTypesController');
 const { adminTypeValidationRules, adminTypeUpdateValidationRules, validate } = require('../validators/adminTypesValidator');
 
-router.get('/', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), adminTypesController.getAllAdminTypes);
+router.get('/',  adminTypesController.getAllAdminTypes);
 router.get('/:id', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), adminTypesController.getAdminTypeById);
-router.post('/', auth.authorize([Roles.ADMIN, Roles.SELLER]), adminTypeValidationRules, validate, adminTypesController.createAdminType);
+router.post('/',  adminTypeValidationRules, validate, adminTypesController.createAdminType);
 router.put('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), adminTypeUpdateValidationRules, validate, adminTypesController.updateAdminType);
 router.delete('/:id', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), adminTypesController.deleteAdminType);
 

@@ -6,7 +6,7 @@ const { generateVerificationToken } = require('../utils/token');
 // Create new user 
 const createUser = async (req, res) => {
   try {
-    const { username, business_name, email, passwrd, user_type } = req.body;
+    const {firstname, lastname, username, business_name, email, password, user_type } = req.body;
 
     const existingUser = await Users.findOne({ where: { email } });
     if (existingUser) {
@@ -16,10 +16,12 @@ const createUser = async (req, res) => {
     const hashedPassword = await encryption.hash(passwrd);
     const token = generateVerificationToken();
     const user = await Users.create({
+      firstname:firstname,
+      lastname:lastname,
       username: username, 
       business_name: business_name, 
       email: email, 
-      passwrd: hashedPassword, 
+      password: hashedPassword, 
       user_type: user_type, 
       verified: false, 
       verification_token: token });

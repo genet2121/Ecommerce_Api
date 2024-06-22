@@ -13,17 +13,17 @@ const userValidationRules = [
     .isEmail().withMessage('Please enter a valid email address')
     .normalizeEmail(),
     
-  body('passwrd')
+  body('password')
     .notEmpty()
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
   
-  body('confirm_password')
-    .custom((value, { req }) => {
-      if (value !== req.body.passwrd) {
-        throw new Error('Passwords do not match');
-      }
-      return true;
-    }),
+  // body('confirm_password')
+  //   .custom((value, { req }) => {
+  //     if (value !== req.body.passwrd) {
+  //       throw new Error('Passwords do not match');
+  //     }
+  //     return true;
+  //   }),
 
   body('verified')
     .optional()
