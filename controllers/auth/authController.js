@@ -15,7 +15,7 @@ module.exports = class AuthController {
                 where: {
                     email: email
                 },
-                attributes: ["id", 'email', "passwrd", "user_type"]
+                attributes: ["id", 'email', "password", "admin_type_id"]
             });
 
             if (!user.dataValues) {
@@ -24,7 +24,7 @@ module.exports = class AuthController {
 
             console.log("found user ", user.dataValues);
             
-            const verifyPassword = await this.dependencies.encryption.compare(password, user.dataValues.passwrd);
+            const verifyPassword = await this.dependencies.encryption.compare(password, user.dataValues.password);
 
             if (!verifyPassword) {
                 throw this.dependencies.exceptionHandling.throwError("Incorrect password", 401);

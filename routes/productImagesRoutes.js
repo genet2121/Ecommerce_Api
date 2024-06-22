@@ -17,13 +17,14 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
-  
+const TABLE_NAME = 'product_images';
 const upload = multer({ storage: storage });
 
-router.get('/', productImagesController.getAllProductImages);
-router.get('/:id', productImagesController.getProductImageById);
-router.post('/', upload.single('image'), productImageValidationRules, validate, productImagesController.createProductImage);
-router.put('/:id', upload.single('image'), productImageUpdateValidationRules, validate, productImagesController.updateProductImage);
-router.delete('/:id', productImagesController.deleteProductImage);
+router.get('/', auth.authorize('can_view', TABLE_NAME), productImagesController.getAllProductImages);
+router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), productImagesController.getProductImageById);
+router.post('/', auth.authorize('can_add', TABLE_NAME), upload.single('image'), productImageValidationRules, validate, productImagesController.createProductImage);
+router.put('/:id', auth.authorize('can_update', TABLE_NAME), upload.single('image'), productImageUpdateValidationRules, validate, productImagesController.updateProductImage);
+router.delete('/:id', auth.authorize('can_delete', TABLE_NAME), productImagesController.deleteProductImage);
 
 module.exports = router;
+

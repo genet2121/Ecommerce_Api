@@ -40,9 +40,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
-    user_type: {
-      type: DataTypes.ENUM('buyer','seller'),
-      allowNull: false
+    admin_type_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'admin_types',
+        key: 'id'
+      }
     },
     verification_token: {
       type: DataTypes.STRING(10),
@@ -82,6 +86,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "ref_user" },
+        ]
+      },
+      {
+        name: "fk_admins_admin_types",
+        using: "BTREE",
+        fields: [
+          { name: "admin_type_id" },
         ]
       },
     ]

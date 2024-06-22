@@ -9,11 +9,15 @@ const auth = require('../infrastructure/service/authentatication/auth');
 const Roles = require("../configration/enum"); 
 //const { orderValidationRules, validate } = require('../validators/ordersValidator');
 const { orderValidationRules, orderUpdateValidationRules, validate } = require('../validators/ordersValidator');
+const TABLE_NAME = 'orders';
 
-router.get('/', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), ordersController.getAllOrders);
-router.get('/:id', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), ordersController.getOrderById);
-router.post('/', auth.authorize([Roles.ADMIN, Roles.SELLER]), orderValidationRules, validate, ordersController.createOrder);
-router.put('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), orderUpdateValidationRules, validate, ordersController.updateOrder);
-router.delete('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), ordersController.deleteOrder);
+router.get('/', auth.authorize('can_view', TABLE_NAME), ordersController.getAllOrders);
+router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), ordersController.getOrderById);
+router.post('/', auth.authorize('can_add', TABLE_NAME), orderValidationRules, validate, ordersController.createOrder);
+router.put('/:id', auth.authorize('can_update', TABLE_NAME), orderUpdateValidationRules, validate, ordersController.updateOrder);
+router.delete('/:id', auth.authorize('can_delete', TABLE_NAME), ordersController.deleteOrder);
 
 module.exports = router;
+
+
+

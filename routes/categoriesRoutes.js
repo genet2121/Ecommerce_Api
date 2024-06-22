@@ -19,11 +19,14 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+const TABLE_NAME = 'categories';
 
-router.get('/', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), categoriesController.getAllCategories);
-router.get('/:id', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), categoriesController.getCategoryById);
-router.post('/', auth.authorize([Roles.ADMIN, Roles.SELLER]), upload.single('image'), categoryValidationRules, validate, categoriesController.createCategory);
-router.put('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), upload.single('image'), categoryUpdateValidationRules, validate, categoriesController.updateCategory);
-router.delete('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), categoriesController.deleteCategory);
+router.get('/', auth.authorize('can_view', TABLE_NAME), categoriesController.getAllCategories);
+router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), categoriesController.getCategoryById);
+router.post('/', auth.authorize('can_add', TABLE_NAME), upload.single('image'), categoryValidationRules, validate, categoriesController.createCategory);
+router.put('/:id', auth.authorize('can_update', TABLE_NAME), upload.single('image'), categoryUpdateValidationRules, validate, categoriesController.updateCategory);
+router.delete('/:id', auth.authorize('can_delete', TABLE_NAME), categoriesController.deleteCategory);
 
 module.exports = router;
+
+

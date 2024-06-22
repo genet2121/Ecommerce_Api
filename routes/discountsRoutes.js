@@ -5,11 +5,14 @@ const Roles = require("../configration/enum");
 const router = express.Router();
 const discountsController = require('../controllers/discountsController');
 const { discountValidationRules, discountUpdateValidationRules, validate } = require('../validators/discountsValidator');
+const TABLE_NAME = 'discounts';
 
-router.get('/', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), discountsController.getAllDiscounts);
-router.get('/:id', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), discountsController.getDiscountById);
-router.post('/', auth.authorize([Roles.ADMIN, Roles.SELLER]), discountValidationRules, validate, discountsController.createDiscount);
-router.put('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), discountUpdateValidationRules, validate, discountsController.updateDiscount);
-router.delete('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), discountsController.deleteDiscount);
+router.get('/', auth.authorize('can_view', TABLE_NAME), discountsController.getAllDiscounts);
+router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), discountsController.getDiscountById);
+router.post('/', auth.authorize('can_add', TABLE_NAME), discountValidationRules, validate, discountsController.createDiscount);
+router.put('/:id', auth.authorize('can_update', TABLE_NAME), discountUpdateValidationRules, validate, discountsController.updateDiscount);
+router.delete('/:id', auth.authorize('can_delete', TABLE_NAME), discountsController.deleteDiscount);
 
 module.exports = router;
+
+

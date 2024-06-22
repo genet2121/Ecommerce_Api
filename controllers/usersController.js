@@ -2,41 +2,105 @@ const Encryption = require('../infrastructure/service/authentatication/encryptio
 const { users: Users } = require('../models'); 
 const { sendEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');
+const { admin_types: AdminTypes } = require('../models'); 
+const Sequelize = require('sequelize');
+
+console.log('AdminTypes Model:', AdminTypes); // Add this line to check if AdminTypes is defined
+
+const getSellerAndBuyerTypes = async () => {
+  const adminTypes = await AdminTypes.findAll({
+    where: {
+      admin_type_name: {
+        [Sequelize.Op.in]: ['seller', 'buyer']
+      }
+    }
+  });
+  
+  const typesMap = {};
+  adminTypes.forEach(type => {
+    typesMap[type.admin_type_name] = type.id;
+  });
+
+  return typesMap;
+};
 
 // Create new user 
 const createUser = async (req, res) => {
   try {
-    const {firstname, lastname, username, business_name, email, password, user_type } = req.body;
+    const { firstname, lastname, username, business_name, email, password, admin_type_id } = req.body;
+
+    const typesMap = await getSellerAndBuyerTypes();
+    const validAdminTypeIds = Object.values(typesMap);
+
+    // Validate admin_type_id
+    if (!validAdminTypeIds.includes(admin_type_id)) {
+      return res.status(400).json({ error: 'Invalid admin_type_id. Must be seller or buyer.' });
+    }
 
     const existingUser = await Users.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists' });
     }
     const encryption = new Encryption();
-    const hashedPassword = await encryption.hash(passwrd);
+    const hashedPassword = await encryption.hash(password);
     const token = generateVerificationToken();
     const user = await Users.create({
-      firstname:firstname,
-      lastname:lastname,
-      username: username, 
-      business_name: business_name, 
-      email: email, 
-      password: hashedPassword, 
-      user_type: user_type, 
-      verified: false, 
-      verification_token: token });
+      firstname,
+      lastname,
+      username,
+      business_name,
+      email,
+      password: hashedPassword,
+      admin_type_id,
+      verified: false,
+      verification_token: token
+    });
 
     const url = `http://localhost:8080/api/users/verify/${user.id}/${token}`;
-    let msg = `Please click <a href="${url}">here</a> to verify your email.`
+    let msg = `Please click <a href="${url}">here</a> to verify your email.`;
     let subject = 'Verify your email';
     await sendEmail(user.email, subject, msg);
     res.status(201).json({ message: 'User created. Please check your email to verify your account.' });
   } catch (error) {
-
     console.error('Error creating user:', error);
     res.status(500).json({ error: error });
   }
 };
+
+
+// const createUser = async (req, res) => {
+//   try {
+//     const {firstname, lastname, username, business_name, email, password, user_type } = req.body;
+
+//     const existingUser = await Users.findOne({ where: { email } });
+//     if (existingUser) {
+//       return res.status(400).json({ error: 'Email already exists' });
+//     }
+//     const encryption = new Encryption();
+//     const hashedPassword = await encryption.hash(password);
+//     const token = generateVerificationToken();
+//     const user = await Users.create({
+//       firstname:firstname,
+//       lastname:lastname,
+//       username: username, 
+//       business_name: business_name, 
+//       email: email, 
+//       password: hashedPassword, 
+//       user_type: user_type, 
+//       verified: false, 
+//       verification_token: token });
+
+//     const url = `http://localhost:8080/api/users/verify/${user.id}/${token}`;
+//     let msg = `Please click <a href="${url}">here</a> to verify your email.`
+//     let subject = 'Verify your email';
+//     await sendEmail(user.email, subject, msg);
+//     res.status(201).json({ message: 'User created. Please check your email to verify your account.' });
+//   } catch (error) {
+
+//     console.error('Error creating user:', error);
+//     res.status(500).json({ error: error });
+//   }
+// };
 
 // Verify user
 const verifyUser = async (req, res) => {
@@ -66,7 +130,7 @@ const verifyUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const users = await Users.findAll({
-      attributes: { exclude: ['passwrd'] }
+      attributes: { exclude: ['password'] }
     });
     res.status(200).json(users);
   } catch (error) {
@@ -80,7 +144,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const user = await Users.findByPk(req.params.id, {
-      attributes: { exclude: ['passwrd'] }
+      attributes: { exclude: ['password'] }
     });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });

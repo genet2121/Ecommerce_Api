@@ -17,13 +17,15 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
-
+const TABLE_NAME = 'documents';
 const upload = multer({ storage: storage });
 
-router.get('/', documentsController.getAllDocuments);
-router.get('/:id', documentsController.getDocumentById);
-router.post('/', upload.single('doc'), documentValidationRules, validate, documentsController.createDocument);
-router.put('/:id', upload.single('doc'), documentUpdateValidationRules, validate, documentsController.updateDocument);
-router.delete('/:id', documentsController.deleteDocument);
+router.get('/',auth.authorize('can_view', TABLE_NAME), documentsController.getAllDocuments);
+router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), documentsController.getDocumentById);
+router.post('/', auth.authorize('can_add', TABLE_NAME), upload.single('doc'), documentValidationRules, validate, documentsController.createDocument);
+router.put('/:id', auth.authorize('can_update', TABLE_NAME), upload.single('doc'), documentUpdateValidationRules, validate, documentsController.updateDocument);
+router.delete('/:id', auth.authorize('can_delete', TABLE_NAME), documentsController.deleteDocument);
 
 module.exports = router;
+
+

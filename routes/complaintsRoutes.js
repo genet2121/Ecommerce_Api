@@ -18,11 +18,14 @@ const storage = multer.diskStorage({
   });
   
   const upload = multer({ storage: storage });
+  const TABLE_NAME = 'complaints';
 
-router.get('/', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), complaintsController.getAllComplaints);
-router.get('/:id', auth.authorize([Roles.ADMIN, Roles.BUYER, Roles.SELLER]), complaintsController.getComplaintById);
-router.post('/', auth.authorize([Roles.ADMIN, Roles.SELLER]), upload.single('complaint_images'), complaintValidationRules, validate, complaintsController.createComplaint);
-router.put('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), complaintUpdateValidationRules, validate, complaintsController.updateComplaint);
-router.delete('/:id', auth.authorize([Roles.ADMIN, Roles.SELLER]), complaintsController.deleteComplaint);
+router.get('/', auth.authorize('can_view', TABLE_NAME), complaintsController.getAllComplaints);
+router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), complaintsController.getComplaintById);
+router.post('/', auth.authorize('can_add', TABLE_NAME), upload.single('complaint_images'), complaintValidationRules, validate, complaintsController.createComplaint);
+router.put('/:id', auth.authorize('can_update', TABLE_NAME), complaintUpdateValidationRules, validate, complaintsController.updateComplaint);
+router.delete('/:id', auth.authorize('can_delete', TABLE_NAME), complaintsController.deleteComplaint);
 
 module.exports = router;
+
+
