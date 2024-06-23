@@ -1,11 +1,9 @@
-
 const AdminTypes = require('../models').admin_types;
 
 // Create a new admin type
 const createAdminType = async (req, res) => {
   try {
-    const { admin_type_name } = req.body;
-    const adminType = await AdminTypes.create({ admin_type_name });
+    const adminType = await AdminTypes.create(req.body);
     return res.status(201).json(adminType);
   } catch (error) {
     console.error('Error creating admin type:', error);

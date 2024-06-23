@@ -1,10 +1,10 @@
 // reviewsRoutes.js
 const express = require('express');
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const router = express.Router();
 const reviewsController = require('../controllers/reviewsController');
 const { reviewValidationRules, reviewUpdateValidationRules, validate } = require('../validators/reviewsValidator');
+
 const TABLE_NAME = 'reviews';
 router.get('/', auth.authorize('can_view', TABLE_NAME), reviewsController.getAllReviews);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), reviewsController.getReviewById);

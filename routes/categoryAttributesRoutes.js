@@ -2,11 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const categoryAttributesController = require('../controllers/categoryAttributesController');
 const { categoryAttributeValidationRules, categoryAttributeUpdateValidationRules, validate } = require('../validators/categoryAttributesValidator');
-const TABLE_NAME = 'category_attributes';
 
+const TABLE_NAME = 'category_attributes';
 router.get('/', auth.authorize('can_view', TABLE_NAME), categoryAttributesController.getAllCategoryAttributes);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), categoryAttributesController.getCategoryAttributeById);
 router.post('/', auth.authorize('can_add', TABLE_NAME), categoryAttributeValidationRules, validate, categoryAttributesController.createCategoryAttribute);

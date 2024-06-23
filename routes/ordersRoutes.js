@@ -2,15 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const ordersController = require('../controllers/ordersController');
-
-
-
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum"); 
-//const { orderValidationRules, validate } = require('../validators/ordersValidator');
 const { orderValidationRules, orderUpdateValidationRules, validate } = require('../validators/ordersValidator');
-const TABLE_NAME = 'orders';
 
+const TABLE_NAME = 'orders';
 router.get('/', auth.authorize('can_view', TABLE_NAME), ordersController.getAllOrders);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), ordersController.getOrderById);
 router.post('/', auth.authorize('can_add', TABLE_NAME), orderValidationRules, validate, ordersController.createOrder);

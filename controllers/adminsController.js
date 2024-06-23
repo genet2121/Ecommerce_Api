@@ -1,5 +1,3 @@
-
-
 const Admins = require('../models').admins;
 const bcrypt = require('bcrypt');
 
@@ -17,13 +15,38 @@ const createAdmin = async (req, res) => {
       lastname: lastname,
       email: email,
       password: hashedPassword,
-      photo: photoPath
+      photo: ''
     });
 
     return res.status(201).json(admin);
   } catch (error) {
     console.error('Error creating admin:', error);
     return res.status(500).json({ error: error.message });
+  }
+};
+
+// Upload admin photo
+const uploadAdminPhoto = async (req, res) => {
+  const adminId = req.params.id;
+  const photoPath = req.file.path;
+
+  if (!file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  try {
+    const admin = await Admins.findByPk(adminId);
+    if (!admin) {
+      return res.status(404).json({ error: 'Admin not found' });
+    }
+
+    admin.photo = photoPath;
+    await admin.save();
+
+    return res.status(200).json({ message: 'Photo uploaded successfully', admin });
+  } catch (error) {
+    console.error('Error uploading photo:', error);
+    return res.status(500).json({ error: 'Failed to upload photo' });
   }
 };
 
@@ -59,16 +82,11 @@ const updateAdmin = async (req, res) => {
     if (!admin) {
       return res.status(404).json({ error: 'Admin not found' });
     }
-
-    const photoPath = req.file ? req.file.path : admin.photo;
-    const updatedFields = { ...req.body, photo: photoPath };
-
-    await admin.update(updatedFields);
-
+    await admin.update(req.body);
     return res.status(200).json(admin);
   } catch (error) {
-    console.error('Error updating admin:', error);
-    return res.status(500).json({ error: error.message });
+    console.error('Error updating admin:', error); 
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -89,6 +107,7 @@ const deleteAdmin = async (req, res) => {
 
 module.exports = {
   createAdmin,
+  uploadAdminPhoto,
   getAllAdmins,
   getAdminById,
   updateAdmin,

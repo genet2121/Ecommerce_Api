@@ -1,10 +1,10 @@
 // transactionsRoutes.js
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const express = require('express');
 const router = express.Router();
 const transactionsController = require('../controllers/transactionsController');
 const { transactionValidationRules, transactionUpdateValidationRules, validate } = require('../validators/transactionsValidator');
+
 const TABLE_NAME = 'transactions';
 router.get('/', auth.authorize('can_view', TABLE_NAME), transactionsController.getAllTransactions);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), transactionsController.getTransactionById);

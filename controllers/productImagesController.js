@@ -4,16 +4,40 @@ const ProductImages = require('../models').product_images;
 const createProductImage = async (req, res) => {
   try {
     const { product_id } = req.body;
-    const imagePath = req.file.path;
 
     const admin = await ProductImages.create({
       product_id: product_id,
-      image: imagePath
+      image: ''
     });
 
     return res.status(201).json(admin);
   } catch (error) {
     return res.status(500).json({ error: error });
+  }
+};
+
+// Upload product image
+const uploadProductImage = async (req, res) => {
+  const productId = req.params.id;
+  const imagePath = req.file.path;
+
+  if (!file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  try {
+    const product = await ProductImages.findByPk(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'product not found' });
+    }
+
+    product.image = imagePath;
+    await product.save();
+
+    return res.status(200).json({ message: 'Image uploaded successfully', product });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return res.status(500).json({ error: 'Failed to upload image' });
   }
 };
 
@@ -44,12 +68,10 @@ const getProductImageById = async (req, res) => {
 const updateProductImage = async (req, res) => {
   try {
     const productImage = await ProductImages.findByPk(req.params.id);
-    const imagePath = req.file.path;
     if (!productImage) {
       return res.status(404).json({ error: 'Product image not found' });
     }
     await productImage.update(req.body);
-    await productImage.update({ image: imagePath });
     return res.status(200).json(productImage);
   } catch (error) {
     return res.status(500).json({ error: error });
@@ -72,6 +94,7 @@ const deleteProductImage = async (req, res) => {
 
 module.exports = {
   createProductImage,
+  uploadProductImage,
   getAllProductImages,
   getProductImageById,
   updateProductImage,

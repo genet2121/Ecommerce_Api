@@ -1,12 +1,11 @@
 // discountsRoutes.js
 const express = require('express');
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const router = express.Router();
 const discountsController = require('../controllers/discountsController');
 const { discountValidationRules, discountUpdateValidationRules, validate } = require('../validators/discountsValidator');
-const TABLE_NAME = 'discounts';
 
+const TABLE_NAME = 'discounts';
 router.get('/', auth.authorize('can_view', TABLE_NAME), discountsController.getAllDiscounts);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), discountsController.getDiscountById);
 router.post('/', auth.authorize('can_add', TABLE_NAME), discountValidationRules, validate, discountsController.createDiscount);

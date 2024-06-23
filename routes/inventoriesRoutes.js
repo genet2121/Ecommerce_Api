@@ -5,8 +5,8 @@ const Roles = require("../configration/enum");
 const router = express.Router();
 const inventoryController = require('../controllers/inventoriesController');
 const { inventoryValidationRules, inventoryUpdateValidationRules, validate } = require('../validators/inventoriesValidator');
-const TABLE_NAME = 'inventories';
 
+const TABLE_NAME = 'inventories';
 router.get('/', auth.authorize('can_view', TABLE_NAME), inventoryController.getAllInventories);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), inventoryController.getInventoryById);
 router.post('/', auth.authorize('can_add', TABLE_NAME), inventoryValidationRules, validate, inventoryController.createInventory);

@@ -1,10 +1,10 @@
 // receiptsRoutes.js
 const express = require('express');
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const router = express.Router();
 const receiptsController = require('../controllers/receiptsController');
 const { receiptValidationRules, receiptUpdateValidationRules, validate } = require('../validators/receiptsValidator');
+
 const TABLE_NAME = 'receipts';
 router.get('/', auth.authorize('can_view', TABLE_NAME), receiptsController.getAllReceipts);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), receiptsController.getReceiptById);

@@ -4,19 +4,43 @@ const Complaints = require('../models').complaints;
 const createComplaint = async (req, res) => {
   try {
     const { topic, complainee_id, complaint_text, status_in } = req.body;
-    const imagePath = req.file.path;
 
     const complaint = await Complaints.create({
       topic: topic,
       complainee_id: complainee_id,
       complaint_text: complaint_text,
-      complaint_images: imagePath,
+      complaint_images: '',
       status_in: status_in
     });
 
     return res.status(201).json(complaint);
   } catch (error) {
     return res.status(500).json({ error: error });
+  }
+};
+
+// Upload complaint image
+const uploadComplaintDocument = async (req, res) => {
+  const complaintId = req.params.id;
+  const docPath = req.file.path;
+
+  if (!file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  try {
+    const complaint = await Complaints.findByPk(complaintId);
+    if (!complaint) {
+      return res.status(404).json({ error: 'complaint not found' });
+    }
+
+    complaint.complaint_doc = docPath;
+    await complaint.save();
+
+    return res.status(200).json({ message: 'Image uploaded successfully', complaint });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return res.status(500).json({ error: 'Failed to upload image' });
   }
 };
 
@@ -73,6 +97,7 @@ const deleteComplaint = async (req, res) => {
 
 module.exports = {
   createComplaint,
+  uploadComplaintDocument,
   getAllComplaints,
   getComplaintById,
   updateComplaint,

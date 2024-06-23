@@ -1,10 +1,10 @@
 // rolesRoutes.js
 const express = require('express');
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const router = express.Router();
 const rolesController = require('../controllers/rolesController');
 const { rolesValidationRules, rolesUpdateValidationRules, validate } = require('../validators/rolesValidator');
+
 const TABLE_NAME = 'roles';
 router.get('/', auth.authorize('can_view', TABLE_NAME), rolesController.getAllRoles);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), rolesController.getRoleById);

@@ -67,40 +67,30 @@ const createUser = async (req, res) => {
   }
 };
 
+// Upload user image
+const uploadUserImage = async (req, res) => {
+  const userId = req.params.id;
+  const imagePath = req.file.path;
 
-// const createUser = async (req, res) => {
-//   try {
-//     const {firstname, lastname, username, business_name, email, password, user_type } = req.body;
+  if (!file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
 
-//     const existingUser = await Users.findOne({ where: { email } });
-//     if (existingUser) {
-//       return res.status(400).json({ error: 'Email already exists' });
-//     }
-//     const encryption = new Encryption();
-//     const hashedPassword = await encryption.hash(password);
-//     const token = generateVerificationToken();
-//     const user = await Users.create({
-//       firstname:firstname,
-//       lastname:lastname,
-//       username: username, 
-//       business_name: business_name, 
-//       email: email, 
-//       password: hashedPassword, 
-//       user_type: user_type, 
-//       verified: false, 
-//       verification_token: token });
+  try {
+    const user = await Users.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'user not found' });
+    }
 
-//     const url = `http://localhost:8080/api/users/verify/${user.id}/${token}`;
-//     let msg = `Please click <a href="${url}">here</a> to verify your email.`
-//     let subject = 'Verify your email';
-//     await sendEmail(user.email, subject, msg);
-//     res.status(201).json({ message: 'User created. Please check your email to verify your account.' });
-//   } catch (error) {
+    user.image = imagePath;
+    await user.save();
 
-//     console.error('Error creating user:', error);
-//     res.status(500).json({ error: error });
-//   }
-// };
+    return res.status(200).json({ message: 'Image uploaded successfully', user });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return res.status(500).json({ error: 'Failed to upload image' });
+  }
+};
 
 // Verify user
 const verifyUser = async (req, res) => {
@@ -161,12 +151,10 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const user = await Users.findByPk(req.params.id);
-    const imagePath = req.file.path;
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     await user.update(req.body);
-    await user.update({ image: imagePath });
     res.status(200).json(user);
   } catch (error) {
     console.error('Error updating user:', error); 
@@ -192,9 +180,11 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   createUser,
+  uploadUserImage,
+  verifyUser,
+  getSellerAndBuyerTypes,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
-  verifyUser
 };

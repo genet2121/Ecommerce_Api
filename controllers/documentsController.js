@@ -4,17 +4,41 @@ const Documents = require('../models').documents;
 const createDocument = async (req, res) => {
   try {
     const { user_id, doc_type } = req.body;
-    const filePath = req.file.path;
 
     const document = await Documents.create({
       user_id: user_id,
       doc_type: doc_type,
-      doc: filePath
+      doc: ''
     });
 
     return res.status(201).json(document);
   } catch (error) {
     return res.status(500).json({ error: error });
+  }
+};
+
+// Upload document file
+const uploadDocumentFile = async (req, res) => {
+  const documentId = req.params.id;
+  const filePath = req.file.path;
+
+  if (!file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  try {
+    const document = await Documents.findByPk(documentId);
+    if (!document) {
+      return res.status(404).json({ error: 'document not found' });
+    }
+
+    document.doc = filePath;
+    await document.save();
+
+    return res.status(200).json({ message: 'Image uploaded successfully', document });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return res.status(500).json({ error: 'Failed to upload image' });
   }
 };
 
@@ -45,12 +69,10 @@ const getDocumentById = async (req, res) => {
 const updateDocument = async (req, res) => {
   try {
     const document = await Documents.findByPk(req.params.id);
-    const filePath = req.file.path;
     if (!document) {
       return res.status(404).json({ error: 'Document not found' });
     }
     await document.update(req.body);
-    await document.update({ doc: filePath });
     return res.status(200).json(document);
   } catch (error) {
     return res.status(500).json({ error: error });
@@ -73,6 +95,7 @@ const deleteDocument = async (req, res) => {
 
 module.exports = {
   createDocument,
+  uploadDocumentFile,
   getAllDocuments,
   getDocumentById,
   updateDocument,

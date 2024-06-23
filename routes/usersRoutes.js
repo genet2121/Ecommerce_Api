@@ -1,6 +1,5 @@
 // usersRoutes.js
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -23,7 +22,8 @@ const storage = multer.diskStorage({
 router.get('/', usersController.getAllUsers);
 router.get('/:id', usersController.getUserById);
 router.post('/', userValidationRules, validate, usersController.createUser);
-router.put('/:id', userUpdateValidationRules, validate, upload.single('image'), usersController.updateUser);
+router.post('/:id/image', upload.single('image'), userValidationRules, validate, usersController.createUser);
+router.put('/:id', userUpdateValidationRules, validate, usersController.updateUser);
 router.delete('/:id', usersController.deleteUser);
 router.get('/verify/:id/:token', usersController.verifyUser);
 

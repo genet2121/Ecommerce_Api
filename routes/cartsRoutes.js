@@ -1,7 +1,6 @@
 // cartsRoutes.js
 const express = require('express');
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const router = express.Router();
 const cartsController = require('../controllers/cartsController');
 const { cartValidationRules, cartUpdateValidationRules, validate } = require('../validators/cartsValidator');

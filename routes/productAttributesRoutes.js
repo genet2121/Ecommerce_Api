@@ -1,10 +1,10 @@
 // productAttributesRoutes.js
 const express = require('express');
 const auth = require('../infrastructure/service/authentatication/auth');
-const Roles = require("../configration/enum");
 const router = express.Router();
 const productAttributesController = require('../controllers/productAttributesController');
 const { productAttributesValidationRules, productAttributesUpdateValidationRules, validate } = require('../validators/productAttributesValidator');
+
 const TABLE_NAME = 'product_attributes';
 router.get('/', auth.authorize('can_view', TABLE_NAME), productAttributesController.getAllProductAttributes);
 router.get('/:id', auth.authorize('can_view_detail', TABLE_NAME), productAttributesController.getProductAttributeById);
