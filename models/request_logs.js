@@ -40,11 +40,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    reqBody: {
+    req_body: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    resBody: {
+    res_body: {
       type: DataTypes.TEXT,
       allowNull: true
     }
