@@ -1,4 +1,5 @@
 const CategoryAttributes = require('../models').category_attributes;
+const getAllWithpagination = require('../utils/pagination');
 
 // Create a new category attribute
 const createCategoryAttribute = async (req, res) => {
@@ -12,12 +13,7 @@ const createCategoryAttribute = async (req, res) => {
 
 // Get all category attributes
 const getAllCategoryAttributes = async (req, res) => {
-  try {
-    const categoryAttributes = await CategoryAttributes.findAll();
-    return res.status(200).json(categoryAttributes);
-  } catch (error) {
-    return res.status(500).json({ error: error });
-  }
+  await getAllWithpagination(Products, req, res);
 };
 
 // Get category attribute by ID

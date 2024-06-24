@@ -1,4 +1,5 @@
 const ProductAttributes = require('../models').productAttributes;
+const getAllWithpagination = require('../utils/pagination');
 
 // Create a new productAttribute
 const createProductAttribute = async (req, res) => {
@@ -12,12 +13,7 @@ const createProductAttribute = async (req, res) => {
 
 // Get all product attributes
 const getAllProductAttributes = async (req, res) => {
-  try {
-    const productAttributes = await ProductAttributes.findAll();
-    return res.status(200).json(productAttributes);
-  } catch (error) {
-    return res.status(500).json({ error: error });
-  }
+  await getAllWithpagination(ProductAttributes, req, res);
 };
 
 // Get product attribute by ID
