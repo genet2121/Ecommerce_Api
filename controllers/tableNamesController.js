@@ -1,6 +1,7 @@
 
 
 const TableNames = require('../models').table_names;
+const getAllWithpagination = require('../utils/pagination');
 
 // Create a new table name
 const createTableName = async (req, res) => {
@@ -16,13 +17,16 @@ const createTableName = async (req, res) => {
 
 // Get all table names
 const getAllTableNames = async (req, res) => {
-  try {
-    const tableNames = await TableNames.findAll();
-    return res.status(200).json(tableNames);
-  } catch (error) {
-    console.error('Error fetching table names:', error);
-    return res.status(500).json({ error: error.message });
-  }
+
+  await getAllWithpagination(TableNames, req, res);
+
+  // try {
+  //   const tableNames = await TableNames.findAll();
+  //   return res.status(200).json(tableNames);
+  // } catch (error) {
+  //   console.error('Error fetching table names:', error);
+  //   return res.status(500).json({ error: error.message });
+  // }
 };
 
 // Get table name by ID

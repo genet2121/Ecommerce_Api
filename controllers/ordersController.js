@@ -1,4 +1,5 @@
 const Orders = require('../models').orders;
+const getAllWithpagination = require('../utils/pagination');
 
 // Create a new order
 const createOrder = async (req, res) => {
@@ -12,12 +13,7 @@ const createOrder = async (req, res) => {
 
 // Get all orders
 const getAllOrders = async (req, res) => {
-  try {
-    const orders = await Orders.findAll();
-    return res.status(200).json(orders);
-  } catch (error) {
-    return res.status(500).json({ error: error });
-  }
+  await getAllWithpagination(Orders, req, res);
 };
 
 // Get order by ID

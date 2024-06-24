@@ -1,4 +1,5 @@
 const ProductImages = require('../models').product_images;
+const getAllWithpagination = require('../utils/pagination');
 
 // Create a new product image
 const createProductImage = async (req, res) => {
@@ -43,12 +44,7 @@ const uploadProductImage = async (req, res) => {
 
 // Get all product images
 const getAllProductImages = async (req, res) => {
-  try {
-    const productImages = await ProductImages.findAll();
-    return res.status(200).json(productImages);
-  } catch (error) {
-    return res.status(500).json({ error: error });
-  }
+  await getAllWithpagination(ProductImages, req, res);
 };
 
 // Get product image by ID
