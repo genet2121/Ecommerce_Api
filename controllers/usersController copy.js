@@ -4,6 +4,7 @@ const { sendEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');
 const { admin_types: AdminTypes } = require('../models'); 
 const Sequelize = require('sequelize');
+const getAllWithpagination = require('../utils/pagination');
 
 console.log('AdminTypes Model:', AdminTypes); // Add this line to check if AdminTypes is defined
 
@@ -27,7 +28,7 @@ const getSellerAndBuyerTypes = async () => {
 // Create new user 
 const createUser = async (req, res) => {
   try {
-    const { admin_type_id, firstname, lastname, username, business_name, email, password, user_type } = req.body;
+    const { firstname, lastname, username, business_name, email, password, admin_type_id } = req.body;
 
     const typesMap = await getSellerAndBuyerTypes();
     const validAdminTypeIds = Object.values(typesMap);
@@ -45,14 +46,13 @@ const createUser = async (req, res) => {
     const hashedPassword = await encryption.hash(password);
     const token = generateVerificationToken();
     const user = await Users.create({
-      admin_type_id,
       firstname,
       lastname,
       username,
       business_name,
       email,
       password: hashedPassword,
-      user_type,
+      admin_type_id,
       verified: false,
       verification_token: token
     });
@@ -119,16 +119,7 @@ const verifyUser = async (req, res) => {
 
 // Get all users
 const getAllUsers = async (req, res) => {
-  try {
-    const users = await Users.findAll({
-      attributes: { exclude: ['password'] }
-    });
-    res.status(200).json(users);
-  } catch (error) {
-    console.error('Error fetching users:', error); 
-    return res.status(500).json({ error: error });
-
-  }
+  await getAllWithpagination(Users, req, res);
 };
 
 // Get users by ID

@@ -26,8 +26,7 @@ const walletDetailsRoutes = require('./routes/walletDetailsRoutes');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
+const { logger, responseBodyMiddleware, setUserMiddleware } = require('./logger');
 require('dotenv').config();
 
 const ProjectDependencies = require("./configration/dependance");
@@ -43,8 +42,9 @@ const morgan = require('morgan');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
-app.use(morgan('combined', { stream: accessLogStream })); 
+app.use(logger);
+app.use(responseBodyMiddleware);
+app.use(setUserMiddleware);
 
 // Routes
 app.get('/', (req, res) => {
@@ -60,7 +60,7 @@ app.use('/categories', categoriesRoutes);
 app.use('/category-attributes', categoryAttributesRoutes);
 app.use('/complaints', complaintsRoutes);
 app.use('/discounts', discountsRoutes);
-app.use('/inventory', inventoriesRoutes);
+app.use('/inventories', inventoriesRoutes);
 app.use('/orders', ordersRoutes);
 app.use('/product-attributes', productAttributesRoutes);
 app.use('/payment-methods', paymentMethodsRoutes);
@@ -71,7 +71,7 @@ app.use('/receipts', receiptsRoutes);
 app.use('/reviews', reviewsRoutes);
 app.use('/roles', rolesRoutes);
 app.use('/subscription-plans', subscriptionPlansRoutes);
-app.use('/table-name', tableNamesRoutes);
+app.use('/table-names', tableNamesRoutes);
 app.use('/transactions', transactionsRoutes);
 app.use('/user-addresses', userAddressesRoutes);
 app.use('/users', usersRoutes);

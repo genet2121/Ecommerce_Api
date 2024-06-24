@@ -33,7 +33,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 2000000 },
+  limits: { fileSize: 10000000 },
   fileFilter: fileFilter
 });
 const TABLE_NAME = 'complaints';

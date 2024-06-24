@@ -12,7 +12,7 @@ module.exports = (dependencies)=> {
         try{
             let {email, password} =  req.body;
             if(!email || !password) {
-                throw dependencies.exceptionHandling.throwError("request Body must have phone and password", 400);
+                throw dependencies.exceptionHandling.throwError("request must have password", 400);
             }
             const authresult = await authController.login({email, password});
 

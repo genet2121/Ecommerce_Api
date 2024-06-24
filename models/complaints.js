@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    complaint_images: {
+    complaint_doc: {
       type: DataTypes.STRING(255),
       allowNull: true
     },

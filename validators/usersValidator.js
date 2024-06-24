@@ -29,9 +29,9 @@ const userValidationRules = [
     .optional()
     .isBoolean().withMessage('Verified must be a boolean value'),
 
-  // body('user_type')
-  //   .notEmpty()
-  //   .isIn(['buyer', 'seller']).withMessage('User type must be either buyer or seller')
+  body('user_type')
+    .notEmpty()
+    .isIn(['buyer', 'seller']).withMessage('User type must be either buyer or seller')
 ];
 
 const userUpdateValidationRules = [
@@ -55,9 +55,9 @@ const userUpdateValidationRules = [
     .optional()
     .isBoolean().withMessage('Verified must be a boolean value'),
 
-  // body('user_type')
-  //   .optional()
-  //   .isIn(['buyer', 'seller']).withMessage('User type must be either buyer or seller')
+  body('user_type')
+    .optional()
+    .isIn(['buyer', 'seller']).withMessage('User type must be either buyer or seller')
 ];
 
 const validate = (req, res, next) => {
