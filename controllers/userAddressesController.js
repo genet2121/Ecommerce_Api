@@ -1,4 +1,8 @@
 const UserAddresses = require('../models').user_addresses;
+const { Op } = require('sequelize');
+const Users = require('../models').users;
+const getAllWithPagination = require('../utils/pagination');
+
 
 // Create a new user address
 const createUserAddress = async (req, res) => {
@@ -12,11 +16,27 @@ const createUserAddress = async (req, res) => {
 
 // Get all user addresses
 const getAllUserAddresses = async (req, res) => {
+
+  const { user_id } = req.query;
+
   try {
-    const userAddresses = await UserAddresses.findAll();
-    return res.status(200).json(userAddresses);
+    let whereClause = {};
+
+    if (user_id) {
+      whereClause.user_id = { [Op.eq]: user_id };
+    }
+
+    console.log('whereClause:', whereClause);
+
+    await getAllWithPagination(UserAddresses, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'user'
+      }
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error('Error in getAllUserAddresses:', error);
+    return res.status(500).json({ error: error.message });
   }
 };
 

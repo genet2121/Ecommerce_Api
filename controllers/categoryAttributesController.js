@@ -1,5 +1,8 @@
 const CategoryAttributes = require('../models').category_attributes;
-const getAllWithpagination = require('../utils/pagination');
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Categories = require('../models').categories
+
 
 // Create a new category attribute
 const createCategoryAttribute = async (req, res) => {
@@ -13,7 +16,29 @@ const createCategoryAttribute = async (req, res) => {
 
 // Get all category attributes
 const getAllCategoryAttributes = async (req, res) => {
-  await getAllWithpagination(Products, req, res);
+  const { attribute_name, category_id } = req.query; 
+
+  try {
+    let whereClause = {};
+
+    
+    if (attribute_name) {
+      whereClause.attribute_name = { [Op.like]: `%${attribute_name}%` }; 
+    }
+    if (category_id) {
+      whereClause.category_id = { [Op.eq]: category_id }; 
+    }
+
+    
+    await getAllWithPagination(CategoryAttributes, req, res, whereClause, [
+      {
+        model: Categories,
+        as: 'category',
+      }
+    ]);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 // Get category attribute by ID

@@ -10,7 +10,7 @@ const { categoryValidationRules, categoryUpdateValidationRules, validate } = req
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync('categoryImages/', { recursive: true });
     cb(null, 'categoryImages/');
   },
   filename: function (req, file, cb) {

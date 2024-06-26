@@ -10,7 +10,7 @@ const { productImageValidationRules, productImageUpdateValidationRules, validate
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync('productImages/', { recursive: true });
     cb(null, 'productImages/');
   },
   filename: function (req, file, cb) {

@@ -1,5 +1,8 @@
 const Admins = require('../models').admins;
 const bcrypt = require('bcrypt');
+const { Op } = require('sequelize');
+const { admin_types: AdminTypes } = require('../models'); 
+const getAllWithPagination = require('../utils/pagination');
 
 // Create a new admin
 const createAdmin = async (req, res) => {
@@ -30,7 +33,7 @@ const uploadAdminPhoto = async (req, res) => {
   const adminId = req.params.id;
   const photoPath = req.file.path;
 
-  if (!file) {
+  if (!photoPath) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
@@ -52,11 +55,35 @@ const uploadAdminPhoto = async (req, res) => {
 
 // Get all admins
 const getAllAdmins = async (req, res) => {
+  const { firstname, lastname, email } = req.query;
+
   try {
-    const admins = await Admins.findAll();
-    return res.status(200).json(admins);
+    let whereClause = {};
+    
+    if (firstname) {
+      whereClause.firstname = { [Op.like]: `%${firstname}%` };
+    }
+    if (lastname) {
+      whereClause.lastname = { [Op.like]: `%${lastname}%` };
+    }
+    if (email) {
+      whereClause.email = { [Op.like]: `%${email}%` };
+    }
+
+    console.log('whereClause:', whereClause); 
+
+    await getAllWithPagination(Admins, req, res, whereClause, [
+      {
+        model: AdminTypes,
+        as: 'admin_type'
+      }
+      // {
+      //   model: CategoryAttribute,
+      //   as: 'cat_attr'
+      // },
+    ]);
   } catch (error) {
-    console.error('Error fetching admins:', error);
+    console.error('Error in getAllProducts:', error); 
     return res.status(500).json({ error: error.message });
   }
 };

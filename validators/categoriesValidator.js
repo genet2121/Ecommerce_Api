@@ -5,9 +5,9 @@ const categoryValidationRules = [
     .notEmpty()
     .isString().withMessage('Category name is required'),
 
-  body('parent_id')
-    .notEmpty()
-    .isInt().withMessage('Parent ID must be an integer')
+  // body('parent_id')
+  //   .notEmpty()
+  //   .isInt().withMessage('Parent ID must be an integer')
 ];
 
 const categoryUpdateValidationRules = [
@@ -15,9 +15,9 @@ const categoryUpdateValidationRules = [
     .optional()
     .isString().withMessage('Category name is required'),
 
-  body('parent_id')
-    .optional()
-    .isInt().withMessage('Parent ID must be an integer')
+  // body('parent_id')
+  //   .optional()
+  //   .isInt().withMessage('Parent ID must be an integer')
 ];
 
 const validate = (req, res, next) => {

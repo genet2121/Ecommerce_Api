@@ -56,10 +56,12 @@ function initModels(sequelize) {
 
   admins.belongsTo(admin_types, { as: "admin_type", foreignKey: "admin_type_id"});
   admin_types.hasMany(admins, { as: "admins", foreignKey: "admin_type_id"});
+  users.belongsTo(admin_types, { as: "admin_type", foreignKey: "admin_type_id"});
+  admin_types.hasMany(users, { as: "user", foreignKey: "admin_type_id"});
   roles.belongsTo(admin_types, { as: "admin_type", foreignKey: "admin_type_id"});
   admin_types.hasMany(roles, { as: "roles", foreignKey: "admin_type_id"});
   categories.belongsTo(categories, { as: "parent", foreignKey: "parent_id"});
-  categories.hasMany(categories, { as: "categories", foreignKey: "parent_id"});
+  categories.hasMany(categories, { as: "children", foreignKey: "parent_id"});
   category_attributes.belongsTo(categories, { as: "category", foreignKey: "category_id"});
   categories.hasMany(category_attributes, { as: "category_attributes", foreignKey: "category_id"});
   product_attributes.belongsTo(category_attributes, { as: "category_attribute", foreignKey: "category_attribute_id"});
@@ -93,6 +95,7 @@ function initModels(sequelize) {
   receipts.belongsTo(transactions, { as: "transaction", foreignKey: "transaction_id"});
   transactions.hasMany(receipts, { as: "receipts", foreignKey: "transaction_id"});
   orders.belongsTo(user_addresses, { as: "shipping_address", foreignKey: "shipping_address_id"});
+  orders.belongsTo(products, { as: "product", foreignKey: "product_id"});
   user_addresses.hasMany(orders, { as: "orders", foreignKey: "shipping_address_id"});
   carts.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(carts, { as: "carts", foreignKey: "user_id"});

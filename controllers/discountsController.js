@@ -1,4 +1,8 @@
 const Discounts = require('../models').discounts;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Product =require('../models').products;
+const Users = require('../models').users;
 
 // Create a new discount
 const createDiscount = async (req, res) => {
@@ -12,11 +16,43 @@ const createDiscount = async (req, res) => {
 
 // Get all discounts
 const getAllDiscounts = async (req, res) => {
+  const { seller_id, product_id, discount_code, discount_percent, start_date, end_date} = req.query; 
+
   try {
-    const discounts = await Discounts.findAll();
-    return res.status(200).json(discounts);
+    let whereClause = {};
+    
+    if (discount_code) {
+      whereClause.discount_code = { [Op.like]: `%${discount_code}%` }; 
+    }
+    if (end_date) {
+      whereClause.end_date = { [Op.eq]: end_date }; 
+    }
+    if (start_date) {
+      whereClause.start_date = { [Op.eq]: start_date }; 
+    }
+    if (discount_percent) {
+      whereClause.discount_percent = { [Op.eq]: discount_percent }; 
+    }
+    if (seller_id) {
+      whereClause.seller_id = { [Op.eq]: seller_id }; 
+    }
+    if (product_id) {
+      whereClause.product_id = { [Op.eq]: product_id }; 
+    }
+
+    
+    await getAllWithPagination(Discounts, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'seller',
+      },
+      {
+        model: Product,
+        as: 'product'
+      }
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

@@ -1,6 +1,8 @@
-const ProductAttributes = require('../models').productAttributes;
-const getAllWithpagination = require('../utils/pagination');
-
+const ProductAttributes = require('../models').product_attributes;
+const getAllWithPagination = require('../utils/pagination');
+const CategoryAttribute = require('../models').category_attributes;
+const Products = require('../models').products
+const { Op } = require('sequelize');
 // Create a new productAttribute
 const createProductAttribute = async (req, res) => {
   try {
@@ -13,7 +15,36 @@ const createProductAttribute = async (req, res) => {
 
 // Get all product attributes
 const getAllProductAttributes = async (req, res) => {
-  await getAllWithpagination(ProductAttributes, req, res);
+  const { product_id, category_attribute_id, attribute_value } = req.query;
+
+  try {
+    let whereClause = {};
+    if (product_id) {
+      whereClause.product_id = { [Op.eq]: product_id };
+    }
+    if (category_attribute_id) {
+      whereClause.category_attribute_id = { [Op.eq]: category_attribute_id };
+    }
+    if (attribute_value) {
+      whereClause.attribute_value = { [Op.like]: `%${attribute_value}%` };
+    }
+
+    console.log('whereClause:', whereClause); 
+
+    await getAllWithPagination(ProductAttributes, req, res, whereClause, [
+      {
+        model: Products,
+        as: 'product'
+      },
+      // {
+      //   model: CategoryAttribute,
+      //   as: 'cat_attr'
+      // },
+    ]);
+  } catch (error) {
+    console.error('Error in getAllProducts:', error); 
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 // Get product attribute by ID

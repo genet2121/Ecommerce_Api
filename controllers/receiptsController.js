@@ -1,4 +1,8 @@
 const Receipts = require('../models').receipts;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Transaction =require('../models').transactions;
+const Users = require('../models').users;
 
 // Create a new receipt
 const createReceipt = async (req, res) => {
@@ -12,11 +16,41 @@ const createReceipt = async (req, res) => {
 
 // Get all receipts
 const getAllReceipts = async (req, res) => {
+  const { seller_id, buyer_id, transaction_id, amount} = req.query;
   try {
-    const receipts = await Receipts.findAll();
-    return res.status(200).json(receipts);
+    let whereClause = {};
+  
+    if (seller_id) {
+      whereClause.seller_id = { [Op.eq]: seller_id }; 
+    }
+    if (buyer_id) {
+      whereClause.buyer_id = { [Op.eq]: buyer_id }; 
+    }
+    if (amount) {
+      whereClause.amount = { [Op.eq]: amount }; 
+    }
+   
+    if (transaction_id) {
+      whereClause.transaction_id = { [Op.eq]: transaction_id }; 
+    }
+
+    
+    await getAllWithPagination(Receipts, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'seller',
+      },
+      {
+        model: Users,
+        as: 'buyer',
+      },
+      {
+        model: Transaction,
+        as: 'transaction'
+      },
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

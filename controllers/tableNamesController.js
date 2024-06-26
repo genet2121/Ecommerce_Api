@@ -1,7 +1,7 @@
 
-
+const { Op } = require('sequelize');
 const TableNames = require('../models').table_names;
-const getAllWithpagination = require('../utils/pagination');
+const getAllWithPagination = require('../utils/pagination');
 
 // Create a new table name
 const createTableName = async (req, res) => {
@@ -18,15 +18,21 @@ const createTableName = async (req, res) => {
 // Get all table names
 const getAllTableNames = async (req, res) => {
 
-  await getAllWithpagination(TableNames, req, res);
+ // await getAllWithpagination(TableNames, req, res);
+ const { tabName, createdAt } = req.query; 
 
-  // try {
-  //   const tableNames = await TableNames.findAll();
-  //   return res.status(200).json(tableNames);
-  // } catch (error) {
-  //   console.error('Error fetching table names:', error);
-  //   return res.status(500).json({ error: error.message });
-  // }
+  try {
+    let whereClause = {};
+    if (tabName) {
+      whereClause.tab_name = { [Op.like]: `%${tabName}%` }; 
+    }
+    if (createdAt) {
+      whereClause.createdAt = { [Op.gte]: new Date(createdAt) }; 
+    }
+    await getAllWithPagination(TableNames, req, res, whereClause);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 // Get table name by ID

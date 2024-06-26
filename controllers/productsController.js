@@ -1,5 +1,8 @@
+const { Op } = require('sequelize');
 const Products = require('../models').products;
-const getAllWithpagination = require('../utils/pagination');
+const CategoryAttribute = require('../models').category_attributes;
+const User =require('../models').users;
+const getAllWithPagination = require('../utils/pagination');
 
 // Create a new product
 const createProduct = async (req, res) => {
@@ -13,9 +16,72 @@ const createProduct = async (req, res) => {
 
 // Get all products
 const getAllProducts = async (req, res) => {
+  const { p_name, price, cat_attr_id, seller_id } = req.query; 
 
-  await getAllWithpagination(Products, req, res);
+  try {
+    let whereClause = {};
+    if (p_name) {
+      whereClause.p_name = { [Op.like]: `%${p_name}%` }; 
+    }
+    if (price) {
+      whereClause.price = { [Op.eq]: price }; 
+    }
+    if (cat_attr_id) {
+      whereClause.cat_attr_id = { [Op.eq]: cat_attr_id }; 
+    }
+    if (seller_id) {
+      whereClause.seller_id = { [Op.eq]: seller_id }; 
+    }
+
+    console.log('whereClause:', whereClause); 
+
+    await getAllWithPagination(Products, req, res, whereClause, [
+      {
+        model: CategoryAttribute,
+        as: 'cat_attr'
+      },
+      {
+        model: User,
+        as: 'seller'
+      }
+    ]);
+  } catch (error) {
+    console.error('Error in getAllProducts:', error); // Debugging line
+    return res.status(500).json({ error: error.message });
+  }
 };
+
+// const getAllProducts = async (req, res) => {
+
+//   const { p_name, price, cat_attr_id, seller_id } = req.query; 
+
+//   try {
+//     let whereClause = {};
+//     if (p_name) {
+//       whereClause.p_name = { [Op.like]: `%${p_name}%` }; 
+//     }
+//     if (price) {
+//       whereClause.price = { [Op.eq]: price }; 
+//     }
+//     if (cat_attr_id) {
+//       whereClause.cat_attr_id = { [Op.eq]: cat_attr_id }; 
+//     }
+//     if (seller_id) {
+//       whereClause.seller_id = { [Op.eq]: seller_id }; 
+//     }
+//     await getAllWithPagination(Products, req, res, whereClause, 
+//       [
+//       {
+//         model: CategoryAttribute,
+//         as: 'cat_attr',
+//       }
+//     ]
+//   );
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+
+// };
 
 // Get product by ID
 const getProductById = async (req, res) => {

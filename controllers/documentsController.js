@@ -1,4 +1,8 @@
 const Documents = require('../models').documents;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Users = require('../models').users;
+
 
 // Create a new document
 const createDocument = async (req, res) => {
@@ -44,11 +48,26 @@ const uploadDocumentFile = async (req, res) => {
 
 // Get all documents
 const getAllDocuments = async (req, res) => {
+  const { user_id, doc_type} = req.query; 
+
   try {
-    const documents = await Documents.findAll();
-    return res.status(200).json(documents);
+    let whereClause = {};
+    
+    if (doc_type) {
+      whereClause.doc_type = { [Op.like]: `%${doc_type}%` }; 
+    }
+    if (user_id) {
+      whereClause.user_id = { [Op.eq]: user_id }; 
+    }
+    
+    await getAllWithPagination(Documents, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'user',
+      }
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

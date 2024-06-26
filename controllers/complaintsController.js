@@ -1,4 +1,7 @@
 const Complaints = require('../models').complaints;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Users = require('../models').users
 
 // Create a new complaint
 const createComplaint = async (req, res) => {
@@ -46,11 +49,34 @@ const uploadComplaintDocument = async (req, res) => {
 
 // Get all complaints
 const getAllComplaints = async (req, res) => {
+  const { topic, complainee_id, complaint_text, status_in} = req.query; 
+
   try {
-    const complaints = await Complaints.findAll();
-    return res.status(200).json(complaints);
+    let whereClause = {};
+    if (topic) {
+      whereClause.topic = { [Op.like]: `%${topic}%` }; 
+    }
+    
+    if (complaint_text) {
+      whereClause.complaint_text = { [Op.like]: `%${complaint_text}%` }; 
+    }
+    if (status_in) {
+      whereClause.status_in = { [Op.like]: `%${status_in}%` }; 
+    }
+   
+    if (complainee_id) {
+      whereClause.complainee_id = { [Op.eq]: complainee_id }; 
+    }
+
+    
+    await getAllWithPagination(Complaints, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'complainee',
+      }
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

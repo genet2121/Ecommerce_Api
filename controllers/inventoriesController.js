@@ -1,4 +1,7 @@
 const Inventories = require('../models').inventories;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Product =require('../models').products;
 
 // Create new inventory entry
 const createInventory = async (req, res) => {
@@ -12,11 +15,26 @@ const createInventory = async (req, res) => {
 
 // Get all inventory entries
 const getAllInventories = async (req, res) => {
+  const { product_id, quantity} = req.query; 
+
   try {
-    const inventory = await Inventories.findAll();
-    return res.status(200).json(inventory);
+    let whereClause = {};
+    if (quantity) {
+      whereClause.quantity = { [Op.eq]: quantity }; 
+    }
+    if (product_id) {
+      whereClause.product_id = { [Op.eq]: product_id }; 
+    }
+
+    
+    await getAllWithPagination(Inventories, req, res, whereClause, [
+      {
+        model: Product,
+        as: 'product'
+      }
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

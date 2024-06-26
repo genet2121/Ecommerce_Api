@@ -9,9 +9,9 @@ const categoryAttributeValidationRules = [
     .notEmpty()
     .isString().withMessage('Attribute name is required'),
 
-  body('attribute_value')
-    .notEmpty()
-    .isString().withMessage('Attribute value is required')
+  // body('attribute_value')
+  //   .notEmpty()
+  //   .isString().withMessage('Attribute value is required')
 ];
 
 const categoryAttributeUpdateValidationRules = [
@@ -23,9 +23,9 @@ const categoryAttributeUpdateValidationRules = [
     .optional()
     .isString().withMessage('Attribute name is required'),
     
-  body('attribute_value')
-    .optional()
-    .isString().withMessage('Attribute value is required')
+  // body('attribute_value')
+  //   .optional()
+  //   .isString().withMessage('Attribute value is required')
 ];
 
 const validate = (req, res, next) => {

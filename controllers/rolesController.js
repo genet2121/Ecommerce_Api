@@ -1,5 +1,8 @@
 const Roles = require('../models').roles;
-
+const { Op } = require('sequelize');
+const AdminTypes = require('../models').admin_types; 
+const getAllWithPagination = require('../utils/pagination');
+const TableName = require('../models').table_names
 // Create a new role
 const createRole = async (req, res) => {
   try {
@@ -12,11 +15,34 @@ const createRole = async (req, res) => {
 
 // Get all roles
 const getAllRoles = async (req, res) => {
+  const {admin_type_id , table_name_id} = req.query;
+
   try {
-    const roles = await Roles.findAll();
-    return res.status(200).json(roles);
+    let whereClause = {};
+    
+    
+    if (admin_type_id) {
+      whereClause.admin_type_id = { [Op.eq]: admin_type_id }; 
+    }
+    if (table_name_id) {
+      whereClause.table_name_id = { [Op.eq]: table_name_id }; 
+    }
+
+    console.log('whereClause:', whereClause); 
+
+    await getAllWithPagination(Roles, req, res, whereClause, [
+      {
+        model: AdminTypes,
+        as: 'admin_type'
+      },
+      {
+        model: TableName,
+        as: 'table_name'
+      },
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error('Error in getAllRoles:', error); 
+    return res.status(500).json({ error: error.message });
   }
 };
 

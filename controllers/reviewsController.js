@@ -1,4 +1,8 @@
 const Reviews = require('../models').reviews;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Product =require('../models').products;
+const Users = require('../models').users;
 
 // Create a new review
 const createReview = async (req, res) => {
@@ -12,11 +16,38 @@ const createReview = async (req, res) => {
 
 // Get all reviews
 const getAllReviews = async (req, res) => {
+  const { user_id, product_id, rating, comment_text} = req.query;
+
   try {
-    const reviews = await Reviews.findAll();
-    return res.status(200).json(reviews);
+    let whereClause = {};
+  
+    if (user_id) {
+      whereClause.user_id = { [Op.eq]: user_id }; 
+    }
+    if (product_id) {
+      whereClause.product_id = { [Op.eq]: product_id }; 
+    }
+    if (rating) {
+      whereClause.rating = { [Op.eq]: rating }; 
+    }
+   
+    if (comment_text) {
+      whereClause.comment_text = { [Op.like]: `%${comment_text}%` }; 
+    }
+
+    
+    await getAllWithPagination(Reviews, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'user',
+      },
+      {
+        model: Product,
+        as: 'product'
+      },
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

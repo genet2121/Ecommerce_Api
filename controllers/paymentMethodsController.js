@@ -1,5 +1,6 @@
 const PaymentMethods = require('../models').payment_methods;
-
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
 // Create a new payment method
 const createPaymentMethod = async (req, res) => {
   try {
@@ -12,11 +13,24 @@ const createPaymentMethod = async (req, res) => {
 
 // Get all payment methods
 const getAllPaymentMethods = async (req, res) => {
+  const { method_name, payment_type} = req.query;
+
   try {
-    const paymentMethods = await PaymentMethods.findAll();
-    return res.status(200).json(paymentMethods);
+    let whereClause = {};
+
+    if (method_name) {
+      whereClause.method_name = { [Op.like]: `%${method_name}%` };
+    }
+    if (payment_type) {
+      whereClause.payment_type = { [Op.like]: `%${payment_type}%` };
+    }
+  
+    console.log('whereClause:', whereClause);
+
+    await getAllWithPagination(PaymentMethods, req, res, whereClause);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error('Error in getAllPaymentMethods:', error);
+    return res.status(500).json({ error: error.message });
   }
 };
 

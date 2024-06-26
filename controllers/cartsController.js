@@ -1,4 +1,7 @@
 const Carts = require('../models').carts;
+const Users = require('../models').users;
+const getAllWithPagination = require('../utils/pagination');
+const Product =require('../models').products
 
 // Create a new cart item
 const createCart = async (req, res) => {
@@ -12,11 +15,36 @@ const createCart = async (req, res) => {
 
 // Get all cart items
 const getAllCarts = async (req, res) => {
+  const { user_id, product_id } = req.query;
+
   try {
-    const cart = await Carts.findAll();
-    return res.status(200).json(cart);
+    let whereClause = {};
+
+    if (user_id) {
+      whereClause.user_id = { [Op.eq]: user_id };
+    }
+    
+    if (product_id) {
+      whereClause.product_id = { [Op.eq]: product_id };
+    }
+
+
+    console.log('whereClause:', whereClause);
+
+    await getAllWithPagination(Carts, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'user'
+      },
+      {
+        model: Product,
+        as: 'product'
+      }
+
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error('Error in getAllCarts:', error);
+    return res.status(500).json({ error: error.message });
   }
 };
 

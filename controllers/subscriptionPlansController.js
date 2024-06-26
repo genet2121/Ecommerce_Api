@@ -1,4 +1,6 @@
 const SubscriptionPlans = require('../models').subscription_plans;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
 
 // Create a new subscription plan
 const createSubscriptionPlan = async (req, res) => {
@@ -12,11 +14,29 @@ const createSubscriptionPlan = async (req, res) => {
 
 // Get all subscription plans
 const getAllSubscriptionPlans = async (req, res) => {
+  const {subp_name ,des, price, duration_days} = req.query;
   try {
-    const subscriptionPlans = await SubscriptionPlans.findAll();
-    return res.status(200).json(subscriptionPlans);
+    let whereClause = {};
+    if (subp_name) {
+      whereClause.subp_name = { [Op.like]: `%${subp_name}%` }; 
+    }
+    if (des) {
+      whereClause.des = { [Op.like]: `%${des}%` }; 
+    }
+    
+    if (price) {
+      whereClause.price = { [Op.eq]: price }; 
+    }
+    if (duration_days) {
+      whereClause.duration_days = { [Op.eq]: duration_days }; 
+    }
+
+    console.log('whereClause:', whereClause); 
+
+    await getAllWithPagination(SubscriptionPlans, req, res, whereClause);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error('Error in getAllRoles:', error); 
+    return res.status(500).json({ error: error.message });
   }
 };
 

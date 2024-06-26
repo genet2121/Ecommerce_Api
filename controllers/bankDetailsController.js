@@ -1,5 +1,7 @@
 const BankDetails = require('../models').bank_details;
-
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const PaymentMethod = require('../models').payment_methods
 // Create a new bank detail
 const createBankDetail = async (req, res) => {
   try {
@@ -12,11 +14,39 @@ const createBankDetail = async (req, res) => {
 
 // Get all bank details
 const getAllBankDetails = async (req, res) => {
+  const { payment_method_id, bank_name, account_number, card_number} = req.query;
+
   try {
-    const bankDetails = await BankDetails.findAll();
-    return res.status(200).json(bankDetails);
+    let whereClause = {};
+
+    if (payment_method_id) {
+      whereClause.payment_method_id = { [Op.eq]: payment_method_id };
+    }
+    if (bank_name) {
+      whereClause.bank_name = { [Op.like]: `%${bank_name}%` };
+    }
+    
+    if (account_number) {
+      whereClause.account_number = { [Op.like]: `%${account_number}%` };
+    }
+    if (card_number) {
+      whereClause.card_number = { [Op.like]: `%${card_number}%` };
+    }
+
+
+    console.log('whereClause:', whereClause);
+
+    await getAllWithPagination(BankDetails, req, res, whereClause, [
+      {
+        model: PaymentMethod,
+        as: 'payment_method'
+      },
+    
+
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.error('Error in getAllCarts:', error);
+    return res.status(500).json({ error: error.message });
   }
 };
 

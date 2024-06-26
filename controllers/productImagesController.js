@@ -1,5 +1,7 @@
 const ProductImages = require('../models').product_images;
-const getAllWithpagination = require('../utils/pagination');
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Product =require('../models').products;
 
 // Create a new product image
 const createProductImage = async (req, res) => {
@@ -22,10 +24,6 @@ const uploadProductImage = async (req, res) => {
   const productId = req.params.id;
   const imagePath = req.file.path;
 
-  if (!file) {
-    return res.status(400).json({ error: 'No file uploaded' });
-  }
-
   try {
     const product = await ProductImages.findByPk(productId);
     if (!product) {
@@ -44,7 +42,24 @@ const uploadProductImage = async (req, res) => {
 
 // Get all product images
 const getAllProductImages = async (req, res) => {
-  await getAllWithpagination(ProductImages, req, res);
+  const { product_id} = req.query; 
+
+  try {
+    let whereClause = {};
+    if (product_id) {
+      whereClause.product_id = { [Op.eq]: product_id }; 
+    }
+
+    
+    await getAllWithPagination(ProductImages, req, res, whereClause, [
+      {
+        model: Product,
+        as: 'product'
+      }
+    ]);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 // Get product image by ID

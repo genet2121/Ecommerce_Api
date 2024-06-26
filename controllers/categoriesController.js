@@ -1,4 +1,6 @@
 const Categories = require('../models').categories;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
 
 // Create a new category
 const createCategory = async (req, res) => {
@@ -22,7 +24,7 @@ const uploadCategoryImage = async (req, res) => {
   const categoryId = req.params.id;
   const imagePath = req.file.path;
 
-  if (!file) {
+  if (!imagePath) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
@@ -42,13 +44,34 @@ const uploadCategoryImage = async (req, res) => {
   }
 };
 
-// Get all categories
+//get all list of categories 
 const getAllCategories = async (req, res) => {
+  const { c_name, parent_id } = req.query; 
+
   try {
-    const categories = await Categories.findAll();
-    return res.status(200).json(categories);
+    let whereClause = {};
+
+    
+    if (c_name) {
+      whereClause.c_name = { [Op.like]: `%${c_name}%` }; 
+    }
+    if (parent_id) {
+      whereClause.parent_id = { [Op.eq]: parent_id }; 
+    }
+
+    
+    await getAllWithPagination(Categories, req, res, whereClause, [
+      {
+        model: Categories,
+        as: 'parent',
+      },
+      {
+        model: Categories,
+        as: 'children',
+      }
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

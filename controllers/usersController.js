@@ -3,10 +3,10 @@ const { users: Users } = require('../models');
 const { sendEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');
 const { admin_types: AdminTypes } = require('../models'); 
-const Sequelize = require('sequelize');
-const getAllWithpagination = require('../utils/pagination');
 
-console.log('AdminTypes Model:', AdminTypes); // Add this line to check if AdminTypes is defined
+const Sequelize = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+
 
 const getSellerAndBuyerTypes = async () => {
   const adminTypes = await AdminTypes.findAll({
@@ -120,7 +120,39 @@ const verifyUser = async (req, res) => {
 
 // Get all users
 const getAllUsers = async (req, res) => {
-  await getAllWithpagination(Users, req, res);
+  const { firstname, lastname, username, email, user_type } = req.query;
+
+  try {
+    let whereClause = {};
+    
+    if (firstname) {
+      whereClause.firstname = { [Op.like]: `%${firstname}%` };
+    }
+    if (lastname) {
+      whereClause.lastname = { [Op.like]: `%${lastname}%` };
+    }
+    if (username) {
+      whereClause.username = { [Op.like]: `%${username}%` };
+    }
+    if (email) {
+      whereClause.email = { [Op.like]: `%${email}%` };
+    }
+    if (user_type) {
+      whereClause.user_type = { [Op.eq]: user_type };
+    }
+
+    console.log('whereClause:', whereClause); 
+
+    await getAllWithPagination(Users, req, res, whereClause, [
+      {
+        model: AdminTypes,
+        as: 'admin_type'
+      }
+    ]);
+  } catch (error) {
+    console.error('Error in getAllusers:', error); 
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 // Get users by ID

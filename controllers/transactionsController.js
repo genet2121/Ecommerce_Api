@@ -1,4 +1,9 @@
 const Transactions = require('../models').transactions;
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
+const Product =require('../models').products;
+const Users = require('../models').users;
+const PaymentMethod = require('../models').payment_methods;
 
 // Create a new transaction
 const createTransaction = async (req, res) => {
@@ -12,11 +17,50 @@ const createTransaction = async (req, res) => {
 
 // Get all transactions
 const getAllTransactions = async (req, res) => {
+  const { seller_id, buyer_id, product_id, amount, status_in, payment_method_id} = req.query; 
   try {
-    const transactions = await Transactions.findAll();
-    return res.status(200).json(transactions);
+    let whereClause = {};
+    
+    if (status_in) {
+      whereClause.status_in = { [Op.like]: `%${status_in}%` }; 
+    }
+    if (seller_id) {
+      whereClause.seller_id = { [Op.eq]: seller_id }; 
+    }
+    if (buyer_id) {
+      whereClause.buyer_id = { [Op.eq]: buyer_id }; 
+    }
+    if (amount) {
+      whereClause.amount = { [Op.eq]: amount }; 
+    }
+    if (payment_method_id) {
+      whereClause.payment_method_id = { [Op.eq]: payment_method_id }; 
+    }
+    if (product_id) {
+      whereClause.product_id = { [Op.eq]: product_id }; 
+    }
+
+    
+    await getAllWithPagination(Transactions, req, res, whereClause, [
+      {
+        model: Users,
+        as: 'seller',
+      },
+      {
+        model: Users,
+        as: 'buyer',
+      },
+      {
+        model: Product,
+        as: 'product'
+      },
+      {
+        model: PaymentMethod,
+        as:'payment_method'
+      }
+    ]);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 };
 

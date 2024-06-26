@@ -1,5 +1,6 @@
 const AdminTypes = require('../models').admin_types;
-
+const { Op } = require('sequelize');
+const getAllWithPagination = require('../utils/pagination');
 // Create a new admin type
 const createAdminType = async (req, res) => {
   try {
@@ -13,11 +14,20 @@ const createAdminType = async (req, res) => {
 
 // Get all admin types
 const getAllAdminTypes = async (req, res) => {
+  const {admin_type_name} = req.query;
+
   try {
-    const adminTypes = await AdminTypes.findAll();
-    return res.status(200).json(adminTypes);
+    let whereClause = {};
+    
+    if (admin_type_name) {
+      whereClause.admin_type_name = { [Op.like]: `%${admin_type_name}%` };
+    }
+
+    console.log('whereClause:', whereClause); 
+
+    await getAllWithPagination(AdminTypes, req, res, whereClause);
   } catch (error) {
-    console.error('Error fetching admin types:', error);
+    console.error('Error in getAllAdminTypes:', error); 
     return res.status(500).json({ error: error.message });
   }
 };

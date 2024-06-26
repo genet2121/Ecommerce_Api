@@ -9,7 +9,6 @@ const { adminValidationRules, adminUpdateValidationRules, validate } = require('
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    fs.mkdirSync(dir, { recursive: true });
     cb(null, 'adminPhotos/');
   },
   filename: function (req, file, cb) {
