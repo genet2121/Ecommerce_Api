@@ -58,7 +58,7 @@ const createUser = async (req, res) => {
       verification_token: token
     });
 
-    const url = `http://localhost:8080/api/users/verify/${user.id}/${token}`;
+    const url = `http://localhost:8080/users/verify/${user.id}/${token}`;
     let msg = `Please click <a href="${url}">here</a> to verify your email.`;
     let subject = 'Verify your email';
     await sendEmail(user.email, subject, msg);
