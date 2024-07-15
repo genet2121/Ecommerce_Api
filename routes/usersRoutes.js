@@ -25,6 +25,9 @@ router.post('/', userValidationRules, validate, usersController.createUser);
 router.post('/:id/image', upload.single('image'), userValidationRules, validate, usersController.createUser);
 router.put('/:id', userUpdateValidationRules, validate, usersController.updateUser);
 router.delete('/:id', usersController.deleteUser);
-router.get('/verify/:id/:token', usersController.verifyUser);
+router.post('/verify', usersController.verifyUser);
+//router.post('/resend-token', usersController.resendVerificationToken);
+router.post('/resend-token/:userId', usersController.resendVerificationToken);
+
 
 module.exports = router;

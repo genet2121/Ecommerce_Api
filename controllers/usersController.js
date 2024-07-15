@@ -1,8 +1,9 @@
-const Encryption = require('../infrastructure/service/authentatication/encryption'); 
-const { users: Users } = require('../models'); 
+const Encryption = require('../infrastructure/service/authentatication/encryption');
+const { users: Users } = require('../models');
 const { sendEmail } = require('../utils/mailer');
 const { generateVerificationToken } = require('../utils/token');
-const { admin_types: AdminTypes } = require('../models'); 
+
+const { admin_types: AdminTypes } = require('../models');
 
 const Sequelize = require('sequelize');
 const getAllWithPagination = require('../utils/pagination');
@@ -16,7 +17,7 @@ const getSellerAndBuyerTypes = async () => {
       }
     }
   });
-  
+
   const typesMap = {};
   adminTypes.forEach(type => {
     typesMap[type.admin_type_name] = type.id;
@@ -68,13 +69,13 @@ const createUser = async (req, res) => {
     });
 
     // Send verification email
-    const url = `http://localhost:8080/users/verify/${user.id}/${token}`;
-    const msg = `Welcome to the e-commerce app. Please click <a href="${url}">here</a> to verify your email.`;
+    //const url = `http://localhost:8080/users/verify/${user.id}/${token}`;
+    const msg = `Welcome to the e-commerce app.\nPlease use the following token to verify your email:${token}`;
     const subject = 'Verify your email';
     await sendEmail(user.email, subject, msg);
 
     // Respond with success message
-    res.status(201).json({ message: 'User created. Please check your email to verify your account.' });
+    res.status(201).json(user);
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: error.message });
@@ -110,13 +111,14 @@ const uploadUserImage = async (req, res) => {
 // Verify user
 const verifyUser = async (req, res) => {
   try {
-    const { token, id } = req.params;
+    const { token, id } = req.body; // Extract token and id from the body instead of params
+
     const user = await Users.findByPk(id);
     if (!user) {
       return res.status(400).json({ error: 'Invalid token or user does not exist.' });
     }
 
-    if(user.verification_token != token) {
+    if (user.verification_token !== token) {
       return res.status(400).json({ error: 'Verification failed!' });
     }
 
@@ -125,12 +127,41 @@ const verifyUser = async (req, res) => {
     await user.save();
     res.status(200).json({ message: 'Email verified successfully.' });
   } catch (error) {
-    console.error('Error verifying user:', error); 
-    res.status(400).json({ error: 'Invalid or expired token.' });
-
-    return res.status(500).json({ error: error });
+    console.error('Error verifying user:', error);
+    return res.status(500).json({ error: error.message });
   }
 };
+//resend verfication token
+const resendVerificationToken = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Fetch user details from database
+    const user = await Users.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Generate a new verification token
+    const token = generateVerificationToken();
+
+    // Update user record with new token (assuming `verification_token` field exists)
+    user.verification_token = token;
+    await user.save();
+
+    // Send verification email with the new token
+    const msg = `Welcome back to the e-commerce app.\nPlease use the following token to verify your email:\n${token}\nThis token will expire in 10 minutes.`;
+    const subject = 'Verify your email';
+    await sendEmail(user.email, subject, msg);
+
+    // Respond with success message
+    res.status(200).json({ message: 'Verification token resent successfully.' });
+  } catch (error) {
+    console.error('Error resending verification token:', error);
+    res.status(500).json({ error: 'Failed to resend verification token.' });
+  }
+};
+
 
 // Get all users
 const getAllUsers = async (req, res) => {
@@ -138,7 +169,7 @@ const getAllUsers = async (req, res) => {
 
   try {
     let whereClause = {};
-    
+
     if (firstname) {
       whereClause.firstname = { [Op.like]: `%${firstname}%` };
     }
@@ -155,7 +186,7 @@ const getAllUsers = async (req, res) => {
       whereClause.user_type = { [Op.eq]: user_type };
     }
 
-    console.log('whereClause:', whereClause); 
+    console.log('whereClause:', whereClause);
 
     await getAllWithPagination(Users, req, res, whereClause, [
       {
@@ -164,7 +195,7 @@ const getAllUsers = async (req, res) => {
       }
     ]);
   } catch (error) {
-    console.error('Error in getAllusers:', error); 
+    console.error('Error in getAllusers:', error);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -180,7 +211,7 @@ const getUserById = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error fetching user:', error); 
+    console.error('Error fetching user:', error);
     return res.status(500).json({ error: error });
 
   }
@@ -196,7 +227,7 @@ const updateUser = async (req, res) => {
     await user.update(req.body);
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error updating user:', error); 
+    console.error('Error updating user:', error);
     return res.status(500).json({ error: error });
 
   }
@@ -212,7 +243,7 @@ const deleteUser = async (req, res) => {
     await user.destroy();
     res.status(204).send();
   } catch (error) {
-    console.error('Error deleting user:', error); 
+    console.error('Error deleting user:', error);
     return res.status(500).json({ error: error });
   }
 };
@@ -226,4 +257,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  resendVerificationToken
 };

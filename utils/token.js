@@ -16,3 +16,5 @@ const generateVerificationToken = () => {
 }
 
 module.exports = { generateVerificationToken };
+
+
