@@ -27,6 +27,24 @@ module.exports = (dependencies)=> {
         }
     });
 
+     router.post('/refresh-token', async (req, res, next) => {
+        try {
+            let { refreshToken } = req.body;
+            if (!refreshToken) {
+                throw dependencies.exceptionHandling.throwError("Request must have a refresh token", 400);
+            }
+            const refreshResult = await authController.refreshToken({ refreshToken });
+            return res.status(200).json(refreshResult);
+        } catch (error) {
+            console.log(error);
+            if (error.statusCode) {
+                return res.status(error.statusCode).json({ message: error.message });
+            } else {
+                return res.status(500).json({ message: "Internal Server Error" });
+            }
+        }
+    });
+
     router.get('/logout', async (req, res, next) => {
         try{
             req.user = null;
@@ -68,6 +86,58 @@ module.exports = (dependencies)=> {
             }
         }
     });
+
+    router.post('/change-password', async (req, res, next) => {
+        try {
+          const { userId, currentPassword, newPassword } = req.body;
+          const result = await authController.changePassword({
+            userId,
+            currentPassword,
+            newPassword,
+          });
+          res.status(200).json(result);
+        } catch (error) {
+          console.log(error);
+          if (error.statusCode) {
+            res.status(error.statusCode).json({ message: error.message });
+          } else {
+            res.status(500).json({ message: "Internal Server Error" });
+          }
+        }
+      });
+
+
+      router.post('/forgot-password', async (req, res, next) => {
+        try {
+            const { email } = req.body;
+            const result = await authController.forgotPassword(email);
+            res.status(200).json(result);
+        } catch (error) {
+            console.log(error);
+            if (error.statusCode) {
+                res.status(error.statusCode).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: "Internal Server Error" });
+            }
+        }
+    });
+
+    router.post('/reset-password/:id/:token', async (req, res, next) => {
+        try {
+            const { token, id } = req.params;
+            const { newPassword } = req.body;
+            const result = await authController.resetPassword(id, token, newPassword);
+            res.status(200).json(result);
+        } catch (error) {
+            console.log(error);
+            if (error.statusCode) {
+                res.status(error.statusCode).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: "Internal Server Error" });
+            }
+        }
+    });
+      
    
     return router;
 

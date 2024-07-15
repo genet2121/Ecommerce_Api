@@ -36,10 +36,10 @@ const getAllProductAttributes = async (req, res) => {
         model: Products,
         as: 'product'
       },
-      // {
-      //   model: CategoryAttribute,
-      //   as: 'cat_attr'
-      // },
+      {
+        model: CategoryAttribute,
+        as: 'category_attribute'
+      },
     ]);
   } catch (error) {
     console.error('Error in getAllProducts:', error); 

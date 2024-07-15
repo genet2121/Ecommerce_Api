@@ -11,6 +11,8 @@ function generateRandomString(length) {
 const generateVerificationToken = () => {
   // return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
   return generateRandomString(4);
-};
+
+ 
+}
 
 module.exports = { generateVerificationToken };

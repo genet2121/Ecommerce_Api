@@ -19,6 +19,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: false
     },
+    price_in_doller:{
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
     cat_attr_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

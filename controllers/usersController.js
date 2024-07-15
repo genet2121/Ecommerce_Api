@@ -25,26 +25,35 @@ const getSellerAndBuyerTypes = async () => {
   return typesMap;
 };
 
+
 // Create new user 
 const createUser = async (req, res) => {
   try {
-    const { admin_type_id, firstname, lastname, username, business_name, email, password, user_type } = req.body;
+    const { firstname, lastname, username, business_name, email, password, user_type } = req.body;
 
+    // Fetch the admin type IDs for seller and buyer
     const typesMap = await getSellerAndBuyerTypes();
-    const validAdminTypeIds = Object.values(typesMap);
 
-    // Validate admin_type_id
-    if (!validAdminTypeIds.includes(admin_type_id)) {
-      return res.status(400).json({ error: 'Invalid admin_type_id. Must be seller or buyer.' });
+    // Validate the user_type and get the corresponding admin_type_id
+    const admin_type_id = typesMap[user_type];
+    if (!admin_type_id) {
+      return res.status(400).json({ error: 'Invalid user_type. Must be seller or buyer.' });
     }
 
+    // Check if the email already exists
     const existingUser = await Users.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists' });
     }
+
+    // Hash the password
     const encryption = new Encryption();
     const hashedPassword = await encryption.hash(password);
+
+    // Generate the verification token
     const token = generateVerificationToken();
+
+    // Create the user
     const user = await Users.create({
       admin_type_id,
       firstname,
@@ -58,16 +67,20 @@ const createUser = async (req, res) => {
       verification_token: token
     });
 
+    // Send verification email
     const url = `http://localhost:8080/users/verify/${user.id}/${token}`;
-    let msg = `Please click <a href="${url}">here</a> to verify your email.`;
-    let subject = 'Verify your email';
+    const msg = `Welcome to the e-commerce app. Please click <a href="${url}">here</a> to verify your email.`;
+    const subject = 'Verify your email';
     await sendEmail(user.email, subject, msg);
+
+    // Respond with success message
     res.status(201).json({ message: 'User created. Please check your email to verify your account.' });
   } catch (error) {
     console.error('Error creating user:', error);
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 // Upload user image
 const uploadUserImage = async (req, res) => {
@@ -108,6 +121,7 @@ const verifyUser = async (req, res) => {
     }
 
     user.verified = true;
+    user.verification_token = '';
     await user.save();
     res.status(200).json({ message: 'Email verified successfully.' });
   } catch (error) {
