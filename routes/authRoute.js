@@ -122,9 +122,9 @@ module.exports = (dependencies)=> {
         }
     });
 
-    router.post('/reset-password/:id/:token', async (req, res, next) => {
+    router.post('/reset-password', async (req, res, next) => {
         try {
-            const { token, id } = req.params;
+            const { token, id } = req.body; // Extract from body
             const { newPassword } = req.body;
             const result = await authController.resetPassword(id, token, newPassword);
             res.status(200).json(result);
@@ -137,6 +137,7 @@ module.exports = (dependencies)=> {
             }
         }
     });
+    
       
    
     return router;

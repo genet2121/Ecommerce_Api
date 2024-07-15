@@ -176,10 +176,10 @@ module.exports = class AuthController {
             }
 
             const resetToken = await generateVerificationToken();
-            const resetUrl = `http://localhost:8080/auth/reset-password/${user.id}/${resetToken}`;
-            this.resetTokens[email] = resetToken;
-            console.log('this.resetTokens[email]', this.resetTokens[resetToken])
-            await sendEmail(email, 'Password Reset', `Please click the following link to reset your password: ${resetUrl}`);
+            //const resetUrl = `http://localhost:8080/auth/reset-password/${user.id}/${resetToken}`;
+            //this.resetTokens[email] = resetToken;
+           // console.log('this.resetTokens[email]', this.resetTokens[resetToken])
+            await sendEmail(email, 'Password Reset', `Please click the following link to reset your password: ${resetToken}`);
             user.verification_token = resetToken;
             await user.save();
             return { message: 'Password reset instructions sent to your email' };
@@ -195,36 +195,34 @@ module.exports = class AuthController {
 
 
 //reset password
-    async resetPassword(id, token, newPassword) {
-        try {
-            const user = await models.users.findByPk(id, {
-                attributes: ['id', 'email', 'password', 'verification_token'],
-            });
-            if (!user) {
-                throw this.dependencies.exceptionHandling.throwError("User not found", 404);
-            }
-    
-            if (token !== user.verification_token) {
-                throw this.dependencies.exceptionHandling.throwError("Invalid token", 400);
-            }
-    
-          
-            const hashedNewPassword = await this.dependencies.encryption.hash(newPassword);
-            await user.update({ password: hashedNewPassword });
-    
-            await user.update({ verification_token: null });
-    
-            return { message: 'Password reset successfully' };
-        } catch (error) {
-            console.log(error);
-            if (error.statusCode) {
-                throw this.dependencies.exceptionHandling.throwError(error.message, error.statusCode);
-            } else {
-                throw this.dependencies.exceptionHandling.throwError(error.message, 500);
-            }
+async resetPassword(id, token, newPassword) {
+    try {
+        const user = await models.users.findByPk(id, {
+            attributes: ['id', 'email', 'password', 'verification_token'],
+        });
+        if (!user) {
+            throw this.dependencies.exceptionHandling.throwError("User not found", 404);
+        }
+
+        if (token !== user.verification_token) {
+            throw this.dependencies.exceptionHandling.throwError("Invalid token", 400);
+        }
+
+        const hashedNewPassword = await this.dependencies.encryption.hash(newPassword);
+        await user.update({ password: hashedNewPassword });
+
+        await user.update({ verification_token: null });
+
+        return { message: 'Password reset successfully' };
+    } catch (error) {
+        console.log(error);
+        if (error.statusCode) {
+            throw this.dependencies.exceptionHandling.throwError(error.message, error.statusCode);
+        } else {
+            throw this.dependencies.exceptionHandling.throwError(error.message, 500);
         }
     }
-    
+}
 
 
     // async resetPassword(token, newPassword) {
