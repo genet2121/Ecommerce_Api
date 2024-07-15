@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     },
     expd_delivery: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING(50),
       allowNull: false
     },
     total_amount: {
@@ -85,20 +85,19 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_orders_product",
-        using: "BTREE",
-        fields: [
-          { name: "product_id" },
-        ]
-      },
-      {
         name: "fk_orders_user_addresses",
         using: "BTREE",
         fields: [
           { name: "shipping_address_id" },
         ]
       },
-      
+      {
+        name: "fk_orders_product",
+        using: "BTREE",
+        fields: [
+          { name: "product_id" },
+        ]
+      },
     ]
   });
 };

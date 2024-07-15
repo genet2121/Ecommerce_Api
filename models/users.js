@@ -9,7 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     admin_type_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'admin_types',
+        key: 'id'
+      }
     },
     firstname: {
       type: DataTypes.STRING(255),
@@ -86,6 +90,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "ref_user" },
+        ]
+      },
+      {
+        name: "admins_ibfk_1_idx",
+        using: "BTREE",
+        fields: [
+          { name: "admin_type_id" },
         ]
       },
     ]

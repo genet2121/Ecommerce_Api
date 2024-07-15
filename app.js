@@ -24,6 +24,7 @@ const userAddressesRoutes = require('./routes/userAddressesRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const userSubscriptionsRoutes = require('./routes/userSubscriptionsRoutes');
 const walletDetailsRoutes = require('./routes/walletDetailsRoutes');
+const wishlistRoute = require("./routes/wishlistRoute");
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -79,6 +80,7 @@ app.use('/user-addresses', userAddressesRoutes);
 app.use('/users', usersRoutes);
 app.use('/user-subscriptions', userSubscriptionsRoutes);
 app.use('/wallet-details', walletDetailsRoutes);
+app.use('/wishlists', wishlistRoute);
 
 app.use('/auth', authRouter(dependencies.getDependencies()))
 app.use('/auth/admin', adminAuthRouter(dependencies.getDependencies()))

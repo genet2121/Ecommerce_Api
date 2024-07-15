@@ -1,33 +1,21 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('products', {
+  return sequelize.define('wishlists', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    p_name: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    des: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    price: {
-      type: DataTypes.FLOAT,
-      allowNull: false
-    },
-    cat_attr_id: {
+    product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'category_attributes',
+        model: 'products',
         key: 'id'
       }
     },
-    seller_id: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -35,13 +23,17 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    price_in_doller: {
-      type: DataTypes.FLOAT,
-      allowNull: false
+    inventory_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'inventories',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
-    tableName: 'products',
+    tableName: 'wishlists',
     timestamps: true,
     indexes: [
       {
@@ -53,17 +45,24 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_products_category_attributes",
+        name: "fk_wishlist_products",
         using: "BTREE",
         fields: [
-          { name: "cat_attr_id" },
+          { name: "product_id" },
         ]
       },
       {
-        name: "fk_products_users",
+        name: "fk_wishlist_inventories",
         using: "BTREE",
         fields: [
-          { name: "seller_id" },
+          { name: "inventory_id" },
+        ]
+      },
+      {
+        name: "fk_wishlist_users",
+        using: "BTREE",
+        fields: [
+          { name: "user_id" },
         ]
       },
     ]

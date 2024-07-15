@@ -6,6 +6,7 @@ var _carts = require("./carts");
 var _categories = require("./categories");
 var _category_attributes = require("./category_attributes");
 var _complaints = require("./complaints");
+var _currencies = require("./currencies");
 var _discounts = require("./discounts");
 var _documents = require("./documents");
 var _inventories = require("./inventories");
@@ -25,6 +26,7 @@ var _user_addresses = require("./user_addresses");
 var _user_subscriptions = require("./user_subscriptions");
 var _users = require("./users");
 var _wallet_details = require("./wallet_details");
+var _wishlists = require("./wishlists");
 
 function initModels(sequelize) {
   var admin_types = _admin_types(sequelize, DataTypes);
@@ -34,6 +36,7 @@ function initModels(sequelize) {
   var categories = _categories(sequelize, DataTypes);
   var category_attributes = _category_attributes(sequelize, DataTypes);
   var complaints = _complaints(sequelize, DataTypes);
+  var currencies = _currencies(sequelize, DataTypes);
   var discounts = _discounts(sequelize, DataTypes);
   var documents = _documents(sequelize, DataTypes);
   var inventories = _inventories(sequelize, DataTypes);
@@ -53,21 +56,26 @@ function initModels(sequelize) {
   var user_subscriptions = _user_subscriptions(sequelize, DataTypes);
   var users = _users(sequelize, DataTypes);
   var wallet_details = _wallet_details(sequelize, DataTypes);
+  var wishlists = _wishlists(sequelize, DataTypes);
 
   admins.belongsTo(admin_types, { as: "admin_type", foreignKey: "admin_type_id"});
   admin_types.hasMany(admins, { as: "admins", foreignKey: "admin_type_id"});
-  users.belongsTo(admin_types, { as: "admin_type", foreignKey: "admin_type_id"});
-  admin_types.hasMany(users, { as: "user", foreignKey: "admin_type_id"});
   roles.belongsTo(admin_types, { as: "admin_type", foreignKey: "admin_type_id"});
   admin_types.hasMany(roles, { as: "roles", foreignKey: "admin_type_id"});
+  users.belongsTo(admin_types, { as: "admin_type", foreignKey: "admin_type_id"});
+  admin_types.hasMany(users, { as: "users", foreignKey: "admin_type_id"});
+  user_addresses.belongsTo(admins, { as: "admin", foreignKey: "admin_id"});
+  admins.hasMany(user_addresses, { as: "user_addresses", foreignKey: "admin_id"});
   categories.belongsTo(categories, { as: "parent", foreignKey: "parent_id"});
-  categories.hasMany(categories, { as: "children", foreignKey: "parent_id"});
+  categories.hasMany(categories, { as: "categories", foreignKey: "parent_id"});
   category_attributes.belongsTo(categories, { as: "category", foreignKey: "category_id"});
   categories.hasMany(category_attributes, { as: "category_attributes", foreignKey: "category_id"});
   product_attributes.belongsTo(category_attributes, { as: "category_attribute", foreignKey: "category_attribute_id"});
   category_attributes.hasMany(product_attributes, { as: "product_attributes", foreignKey: "category_attribute_id"});
   products.belongsTo(category_attributes, { as: "cat_attr", foreignKey: "cat_attr_id"});
   category_attributes.hasMany(products, { as: "products", foreignKey: "cat_attr_id"});
+  wishlists.belongsTo(inventories, { as: "inventory", foreignKey: "inventory_id"});
+  inventories.hasMany(wishlists, { as: "wishlists", foreignKey: "inventory_id"});
   bank_details.belongsTo(payment_methods, { as: "payment_method", foreignKey: "payment_method_id"});
   payment_methods.hasMany(bank_details, { as: "bank_details", foreignKey: "payment_method_id"});
   transactions.belongsTo(payment_methods, { as: "payment_method", foreignKey: "payment_method_id"});
@@ -88,6 +96,8 @@ function initModels(sequelize) {
   products.hasMany(reviews, { as: "reviews", foreignKey: "product_id"});
   transactions.belongsTo(products, { as: "product", foreignKey: "product_id"});
   products.hasMany(transactions, { as: "transactions", foreignKey: "product_id"});
+  wishlists.belongsTo(products, { as: "product", foreignKey: "product_id"});
+  products.hasMany(wishlists, { as: "wishlists", foreignKey: "product_id"});
   user_subscriptions.belongsTo(subscription_plans, { as: "subscription_plan", foreignKey: "subscription_plan_id"});
   subscription_plans.hasMany(user_subscriptions, { as: "user_subscriptions", foreignKey: "subscription_plan_id"});
   roles.belongsTo(table_names, { as: "table_name", foreignKey: "table_name_id"});
@@ -95,7 +105,6 @@ function initModels(sequelize) {
   receipts.belongsTo(transactions, { as: "transaction", foreignKey: "transaction_id"});
   transactions.hasMany(receipts, { as: "receipts", foreignKey: "transaction_id"});
   orders.belongsTo(user_addresses, { as: "shipping_address", foreignKey: "shipping_address_id"});
-  orders.belongsTo(products, { as: "product", foreignKey: "product_id"});
   user_addresses.hasMany(orders, { as: "orders", foreignKey: "shipping_address_id"});
   carts.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(carts, { as: "carts", foreignKey: "user_id"});
@@ -127,6 +136,8 @@ function initModels(sequelize) {
   users.hasMany(user_subscriptions, { as: "user_subscriptions", foreignKey: "user_id"});
   users.belongsTo(users, { as: "ref_user_user", foreignKey: "ref_user"});
   users.hasMany(users, { as: "users", foreignKey: "ref_user"});
+  wishlists.belongsTo(users, { as: "user", foreignKey: "user_id"});
+  users.hasMany(wishlists, { as: "wishlists", foreignKey: "user_id"});
 
   return {
     admin_types,
@@ -136,6 +147,7 @@ function initModels(sequelize) {
     categories,
     category_attributes,
     complaints,
+    currencies,
     discounts,
     documents,
     inventories,
@@ -155,6 +167,7 @@ function initModels(sequelize) {
     user_subscriptions,
     users,
     wallet_details,
+    wishlists,
   };
 }
 module.exports = initModels;
