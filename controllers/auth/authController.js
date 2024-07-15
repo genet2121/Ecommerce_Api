@@ -1,8 +1,8 @@
 const models = require("../../models");
-//const deps = require("../../configration/dependance");
+
 const { sendEmail } = require('../../utils/mailer');
 const { generateVerificationToken } = require('../../utils/token');
-//let tokenStore = {};
+
 module.exports = class AuthController {
 
     dependencies;
@@ -176,9 +176,7 @@ module.exports = class AuthController {
             }
 
             const resetToken = await generateVerificationToken();
-            //const resetUrl = `http://localhost:8080/auth/reset-password/${user.id}/${resetToken}`;
-            //this.resetTokens[email] = resetToken;
-           // console.log('this.resetTokens[email]', this.resetTokens[resetToken])
+          
             await sendEmail(email, 'Password Reset', `Please click the following link to reset your password: ${resetToken}`);
             user.verification_token = resetToken;
             await user.save();
@@ -223,34 +221,6 @@ async resetPassword(id, token, newPassword) {
         }
     }
 }
-
-
-    // async resetPassword(token, newPassword) {
-    //     try {
-
-    //         const { userId } = await this.dependencies.tokenGenerator.verify(
-    //             token,
-    //             this.dependencies.appSecretKey
-    //         );
-
-    //         const user = await models.users.findByPk(userId);
-    //         if (!user) {
-    //             throw this.dependencies.exceptionHandling.throwError("User not found", 404);
-    //         }
-
-    //         const hashedNewPassword = await this.dependencies.encryption.hash(newPassword);
-    //         await user.update({ password: hashedNewPassword });
-
-    //         return { message: 'Password reset successfully' };
-    //     } catch (error) {
-    //         console.log(error);
-    //         if (error.statusCode) {
-    //             throw this.dependencies.exceptionHandling.throwError(error.message, error.statusCode);
-    //         } else {
-    //             throw this.dependencies.exceptionHandling.throwError(error.message, 500);
-    //         }
-    //     }
-    // }
 
 
 
