@@ -1,4 +1,4 @@
-// paymentMethodsRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const RemarksController = require('../controllers/remarksController');

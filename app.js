@@ -37,6 +37,8 @@ const dependencies = new ProjectDependencies();
 const {port} = dependencies.getDependencies()
 const authRouter = require("./routes/authRoute");
 const adminAuthRouter = require("./routes/adminAuthRoute");
+const faqsRoutes = require("./routes/faqsRoute")
+
 
 const app = express();
 const morgan = require('morgan');
@@ -83,6 +85,7 @@ app.use('/user-subscriptions', userSubscriptionsRoutes);
 app.use('/wallet-details', walletDetailsRoutes);
 app.use('/wishlists', wishlistRoute);
 app.use('/remarks', remarkRoute)
+app.use('/faqs', faqsRoutes);
 
 app.use('/auth', authRouter(dependencies.getDependencies()))
 app.use('/auth/admin', adminAuthRouter(dependencies.getDependencies()))

@@ -9,6 +9,7 @@ var _complaints = require("./complaints");
 var _currencies = require("./currencies");
 var _discounts = require("./discounts");
 var _documents = require("./documents");
+var _faqs = require("./faqs");
 var _inventories = require("./inventories");
 var _orders = require("./orders");
 var _payment_methods = require("./payment_methods");
@@ -40,6 +41,7 @@ function initModels(sequelize) {
   var currencies = _currencies(sequelize, DataTypes);
   var discounts = _discounts(sequelize, DataTypes);
   var documents = _documents(sequelize, DataTypes);
+  var faqs = _faqs(sequelize, DataTypes);
   var inventories = _inventories(sequelize, DataTypes);
   var orders = _orders(sequelize, DataTypes);
   var payment_methods = _payment_methods(sequelize, DataTypes);
@@ -152,6 +154,7 @@ function initModels(sequelize) {
     currencies,
     discounts,
     documents,
+    faqs,
     inventories,
     orders,
     payment_methods,
