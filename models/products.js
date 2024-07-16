@@ -19,11 +19,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: false
     },
-    discountedPrice: {
+    discounted_price: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    price_in_doller: {
+    price_in_dollar: {
       type: DataTypes.FLOAT,
       allowNull: false
     },

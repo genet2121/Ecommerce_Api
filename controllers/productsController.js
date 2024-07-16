@@ -9,9 +9,9 @@ const moment = require('moment');
 // Create a new product
 const createProduct = async (req, res) => {
   try {
-    const { p_name, des, price, price_in_doller, cat_attr_id, seller_id, discount_id } = req.body;
+    const { p_name, des, price, price_in_dollar, cat_attr_id, seller_id, discount_id } = req.body;
 
-    let discountedPrice = null; // Initialize discounted price
+    let discounted_price = null; // Initialize discounted price
 
     // Fetch the discount information if available
     if (discount_id) {
@@ -24,7 +24,7 @@ const createProduct = async (req, res) => {
         // Check if current date is within discount period
         if (currentDate.isBetween(startDate, endDate, null, '[]')) {
           const discountPercent = parseFloat(discount.discount_percent) / 100;
-          discountedPrice = price * (1 - discountPercent);
+          discounted_price = price * (1 - discountPercent);
         }
       }
     }
@@ -33,8 +33,8 @@ const createProduct = async (req, res) => {
       p_name,
       des,
       price,
-      discountedPrice, // Store the discounted price in the database
-      price_in_doller,
+      discounted_price, 
+      price_in_dollar,
       cat_attr_id,
       seller_id,
       discount_id
