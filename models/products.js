@@ -19,6 +19,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: false
     },
+    discountedPrice: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    price_in_doller: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
     cat_attr_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -35,9 +43,13 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    price_in_doller: {
-      type: DataTypes.FLOAT,
-      allowNull: false
+    discount_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'discounts',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -64,6 +76,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "seller_id" },
+        ]
+      },
+      {
+        name: "fk_products_discounts_idx",
+        using: "BTREE",
+        fields: [
+          { name: "discount_id" },
         ]
       },
     ]
