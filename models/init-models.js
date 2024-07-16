@@ -16,6 +16,7 @@ var _product_attributes = require("./product_attributes");
 var _product_images = require("./product_images");
 var _products = require("./products");
 var _receipts = require("./receipts");
+var _remarks = require("./remarks");
 var _request_logs = require("./request_logs");
 var _reviews = require("./reviews");
 var _roles = require("./roles");
@@ -46,6 +47,7 @@ function initModels(sequelize) {
   var product_images = _product_images(sequelize, DataTypes);
   var products = _products(sequelize, DataTypes);
   var receipts = _receipts(sequelize, DataTypes);
+  var remarks = _remarks(sequelize, DataTypes);
   var request_logs = _request_logs(sequelize, DataTypes);
   var reviews = _reviews(sequelize, DataTypes);
   var roles = _roles(sequelize, DataTypes);
@@ -157,6 +159,7 @@ function initModels(sequelize) {
     product_images,
     products,
     receipts,
+    remarks,
     request_logs,
     reviews,
     roles,
