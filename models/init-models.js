@@ -71,7 +71,7 @@ function initModels(sequelize) {
   user_addresses.belongsTo(admins, { as: "admin", foreignKey: "admin_id"});
   admins.hasMany(user_addresses, { as: "user_addresses", foreignKey: "admin_id"});
   categories.belongsTo(categories, { as: "parent", foreignKey: "parent_id"});
-  categories.hasMany(categories, { as: "categories", foreignKey: "parent_id"});
+  categories.hasMany(categories, { as: "children", foreignKey: "parent_id"});
   category_attributes.belongsTo(categories, { as: "category", foreignKey: "category_id"});
   categories.hasMany(category_attributes, { as: "category_attributes", foreignKey: "category_id"});
   product_attributes.belongsTo(category_attributes, { as: "category_attribute", foreignKey: "category_attribute_id"});
